@@ -20,6 +20,8 @@ class MyConsts {
 
   static const String xBubblePath = 'assets/images/bubble_x.jpeg';
   static const String oBubblePath = 'assets/images/bubble_o.jpg';
+  static const String superOBubblePath = 'assets/images/super_o.png';
+  static const String superXBubblePath = 'assets/images/super_x.jpg';
   static const String bubblePath = 'assets/images/bubble.jpeg';
 
   static const String sixWinningPath = 'assets/images/number_4.png';
@@ -41,4 +43,6 @@ class MyConsts {
       'assets/sounds/click_sound_effect.mp3';
   static const String backgroundSoundPath =
       'assets/sounds/background_music.wav';
+  static const String superBubbleSoundPath =
+      'assets/sounds/jackpot_sound_edit.mp3';
 }

@@ -31,6 +31,8 @@ flutter:
     - assets/images/bubble.jpeg
     - assets/images/bubble_x.jpeg
     - assets/images/bubble_o.jpg
+    - assets/images/super_x.jpg
+    - assets/images/super_o.png
     - assets/images/number_4.png
     - assets/images/number_5.png
     - assets/images/number_6.jpg

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe/domain/config/game_repo.dart';
 
 class GameSettiings extends ChangeNotifier {
   bool _isPlayerVsAI = false;
@@ -9,6 +10,8 @@ class GameSettiings extends ChangeNotifier {
 
   String _level = 'EASY';
   String get level => _level;
+
+  final currentConfig = GameRepo().gameConfigurations['3x3'];
 
   void setLevel(String value) {
     _level = value;

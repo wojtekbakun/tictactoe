@@ -17,6 +17,7 @@ class GridScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //final game = context.watch<Game>();
     final settings = context.watch<GameSettiings>();
     return Scaffold(
       body: SafeArea(
