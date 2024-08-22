@@ -20,4 +20,27 @@ flutter:
   uses-material-design: true
 
   assets:
+    #images
+    - assets/images/sky.jpg
+    - assets/images/beach.jpg
     - assets/images/3x3v.png
+    - assets/images/6x6_9x9v_super.png
+    - assets/images/6x6_9x9v.png
+    - assets/images/11x11v.png
+    - assets/images/15x15_21x21v.png
+    - assets/images/bubble.jpeg
+    - assets/images/bubble_x.jpeg
+    - assets/images/bubble_o.jpg
+    - assets/images/number_4.png
+    - assets/images/number_5.png
+    - assets/images/number_6.jpg
+    - assets/images/number_7.png
+    - assets/images/number_8.jpg
+    - assets/images/number_9.jpg
+
+    #sounds
+    - assets/sounds/background_music.wav
+    - assets/sounds/bubble_pop.wav
+    - assets/sounds/click_sound_effect.mp3
+    - assets/sounds/jackpot_sound_edit.mp3
+    - assets/sounds/new_swoosh.mp3

@@ -2,6 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TicTacToeGameModel extends ChangeNotifier {
+  //Scores
+  int xScore = 0;
+  int yScore = 0;
+
+  String winningMessage = '';
+
+  bool isPlayerTurn = true;
+
   List<List<String>> _board = [
     ['', '', ''],
     ['', '', ''],

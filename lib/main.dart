@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe/data/providers/providers_init.dart';
+import 'package:tictactoe/core/providers/providers_init.dart';
 import 'package:tictactoe/presentation/screens/game_screen.dart';
 import 'package:tictactoe/presentation/screens/grid_screen.dart';
 import 'package:tictactoe/presentation/screens/level_screen.dart';
@@ -19,6 +19,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Bubble Tic Tac Toe',
       routes: {
         '/mode': (context) => const ModeScreen(),
         '/grid': (context) => const GridScreen(),
