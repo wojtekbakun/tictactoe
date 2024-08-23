@@ -1,5 +1,5 @@
 class MyConsts {
-  static const int cellSize = 100;
+  static const int cellSize = 300;
   static const int gridSize = 3;
   static const int width = cellSize * gridSize;
   static const int height = cellSize * gridSize;

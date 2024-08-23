@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/data/providers/game_settiings.dart';
+import 'package:tictactoe/data/models/ttt_game_model.dart';
+import 'package:tictactoe/data/providers/gameplay.dart';
+import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/button.dart';
 
 List<String> gridSizes = [
-  '3x3 Grid',
-  '6x6 Grid',
-  '9x9 Grid',
-  '11x11 Grid',
-  '15x15 Grid',
-  '18x18 Grid',
+  '3x3',
+  '6x6',
+  '9x9',
+  '11x11',
+  '15x15',
+  '18x18',
+  '21x21',
 ];
 
 class GridScreen extends StatelessWidget {
@@ -18,7 +21,8 @@ class GridScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final game = context.watch<Game>();
-    final settings = context.watch<GameSettiings>();
+    final gameModel = context.watch<TicTacToeGameModel>();
+    final gameplay = context.watch<Gameplay>();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -44,12 +48,22 @@ class GridScreen extends StatelessWidget {
                       Button(
                         text: gridSize,
                         onPressed: () {
-                          settings.isPlayerVsAI
+                          gameModel.isPlayerVsAI
                               ? Navigator.pushNamed(context, '/level')
                               : Navigator.pushNamed(context, '/game');
                           // set the grid size to the selected grid size
-                          settings.setGridSize(
-                              gridSizes[gridSizes.indexOf(gridSize)]);
+                          gameModel.setBoardSize(
+                            GameRepo().gameConfigurations[gridSize]
+                                    ?['grid_size'] ??
+                                3,
+                            gridSize,
+                          );
+                          gameplay.setGridSize(
+                            GameRepo().gameConfigurations[gridSize]
+                                    ?['grid_size'] ??
+                                3,
+                          );
+                          debugPrint('Grid size: $gridSize');
                         },
                       ),
                   ],

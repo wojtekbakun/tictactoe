@@ -4,26 +4,31 @@ class Gameplay extends ChangeNotifier {
   List<List<Map<String, dynamic>>> _floatStates = [];
   double _floatRange = 0;
   double _floatSpeed = 0;
-  final int _gridSize = 3;
+  int _gridSize = 3;
   int get gridSize => _gridSize;
   double get floatRange => _floatRange;
   double get floatSpeed => _floatSpeed;
   List<List<Map<String, dynamic>>> get floatStates => _floatStates;
 
+  void setGridSize(int size) {
+    _gridSize = size;
+    notifyListeners();
+  }
+
   double getGridWidth() {
     double width;
     switch (_gridSize) {
       case 15:
-        width = 3;
+        width = .3;
         break;
       case 18:
-        width = 2;
+        width = .2;
         break;
       case 21:
-        width = 1;
+        width = .1;
         break;
       default:
-        width = 5;
+        width = 1;
     }
     return width;
   }

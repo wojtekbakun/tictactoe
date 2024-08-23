@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/data/providers/game_settiings.dart';
+import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/presentation/widgets/button.dart';
 
 class ModeScreen extends StatelessWidget {
@@ -8,7 +8,7 @@ class ModeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.watch<GameSettiings>();
+    final gameModel = context.watch<TicTacToeGameModel>();
     return Scaffold(
       body: Center(
         child: Column(
@@ -19,14 +19,14 @@ class ModeScreen extends StatelessWidget {
               text: 'Player vs AI',
               onPressed: () {
                 Navigator.pushNamed(context, '/grid');
-                settings.setPlayerVsAI(true);
+                gameModel.setPlayerVsAI(true);
               },
             ),
             Button(
               text: 'Player vs Player',
               onPressed: () {
                 Navigator.pushNamed(context, '/grid');
-                settings.setPlayerVsAI(false);
+                gameModel.setPlayerVsAI(false);
               },
             ),
           ],

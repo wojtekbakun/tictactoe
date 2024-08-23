@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/presentation/widgets/button.dart';
 
 List<String> levels = [
-  'EASY',
-  'MEDIUM',
-  'HARD',
+  'easy',
+  'medium',
+  'hard',
 ];
 
 class LevelScreen extends StatelessWidget {
@@ -12,6 +14,7 @@ class LevelScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gameModel = context.watch<TicTacToeGameModel>();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -37,6 +40,7 @@ class LevelScreen extends StatelessWidget {
                         text: level,
                         onPressed: () {
                           Navigator.pushNamed(context, '/game');
+                          gameModel.setLevelDifficulty(level);
                         },
                       ),
                   ],

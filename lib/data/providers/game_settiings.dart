@@ -5,7 +5,7 @@ class GameSettiings extends ChangeNotifier {
   bool _isPlayerVsAI = false;
   bool get isPlayerVsAI => _isPlayerVsAI;
 
-  String _gridSize = '3x3 Grid';
+  String _gridSize = '3x3';
   String get gridSize => _gridSize;
 
   String _level = 'EASY';

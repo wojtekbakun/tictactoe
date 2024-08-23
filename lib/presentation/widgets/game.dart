@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/core/consts/consts.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
+import 'package:tictactoe/presentation/widgets/get_symbol_image.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -39,6 +39,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final gameModel = context.watch<TicTacToeGameModel>();
     final gameplay = context.watch<Gameplay>();
+    final gridSize = gameModel.gridSizeInt;
+    final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -47,21 +49,22 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // create 3 rows
-            for (var i = 0; i < MyConsts.gridSize; i++)
+            for (var i = 0; i < gridSize; i++)
               Row(
                 children: [
                   // create 3 columns for each row
-                  for (var j = 0; j < MyConsts.gridSize; j++)
+                  for (var j = 0; j < gridSize; j++)
                     // place X or O in the cell
                     GestureDetector(
                       onTap: () {
                         setState(() {
                           gameModel.makeMove(i, j);
                         });
+                        gameModel.isPlayerVsAI ? gameModel.aiMove() : null;
                       },
                       child: Container(
-                        width: MyConsts.cellSize.toDouble(),
-                        height: MyConsts.cellSize.toDouble(),
+                        width: screenWidth / gridSize,
+                        height: screenWidth / gridSize,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.black,
@@ -77,11 +80,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                                 : 0,
                           ),
                           child: Center(
-                            child: gameModel.board[i][j] == ''
-                                ? Image.asset(MyConsts.bubblePath)
-                                : gameModel.board[i][j] == 'X'
-                                    ? Image.asset(MyConsts.xBubblePath)
-                                    : Image.asset(MyConsts.oBubblePath),
+                            child: Padding(
+                              padding: EdgeInsets.all(48 / gridSize),
+                              child: SymbolImage(
+                                currentPlayer: gameModel.board[i][j],
+                              ),
+                            ),
                           ),
                         ),
                       ),
