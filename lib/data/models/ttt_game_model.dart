@@ -10,7 +10,8 @@ class TicTacToeGameModel extends ChangeNotifier {
 
   String winningMessage = '';
 
-  bool isPlayerTurn = true;
+  bool _isPlayerTurn = true;
+  bool get isPlayerTurn => _isPlayerTurn;
 
   List<List<String>> _board = [
     ['', '', ''],
@@ -23,7 +24,11 @@ class TicTacToeGameModel extends ChangeNotifier {
   String _levelDifficulty = 'easy';
   String _gridSize = '3x3';
   int _gridSizeInt = 3;
+  List<List<int>> _winSequence = [];
+  bool _isGameFinished = false;
 
+  bool get isGameFinished => _isGameFinished;
+  List<List<int>> get winSequence => _winSequence;
   List<List<String>> get board => _board;
   String get currentPlayer => _currentPlayer;
   String get winner => _winner;
@@ -52,6 +57,17 @@ class TicTacToeGameModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void finishGame() {
+    debugPrint('Game finished ----------------');
+    _isGameFinished = true;
+    notifyListeners();
+  }
+
+  void setPlayerTurn(bool isPlayerTurn) {
+    _isPlayerTurn = isPlayerTurn;
+    notifyListeners();
+  }
+
   bool makeMove(int i, int j) {
     if (_board[i][j] == '') {
       _board[i][j] = _currentPlayer;
@@ -64,6 +80,7 @@ class TicTacToeGameModel extends ChangeNotifier {
       }
       _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
       debugPrint('Current player: $_currentPlayer');
+
       return true;
     }
     return false;
@@ -94,7 +111,11 @@ class TicTacToeGameModel extends ChangeNotifier {
         }
 
         if (hasWinningSequence) {
-          debugPrint('Winning sequence found in row $row');
+          _winSequence =
+              List.generate(winLength, (index) => [row, col + index]);
+          finishGame();
+          debugPrint(
+              'Winning sequence found in row $row, sequence: $_winSequence');
           return true;
         }
       }
@@ -113,7 +134,11 @@ class TicTacToeGameModel extends ChangeNotifier {
         }
 
         if (hasWinningSequence) {
-          debugPrint('Winning sequence found in column $col');
+          _winSequence =
+              List.generate(winLength, (index) => [row + index, col]);
+          finishGame();
+          debugPrint(
+              'Winning sequence found in column $col, sequence: $_winSequence');
           return true;
         }
       }
@@ -132,7 +157,11 @@ class TicTacToeGameModel extends ChangeNotifier {
         }
 
         if (hasWinningSequence) {
-          debugPrint('Winning sequence found in diagonal');
+          _winSequence =
+              List.generate(winLength, (index) => [row + index, col + index]);
+          finishGame();
+          debugPrint(
+              'Winning sequence found in diagonal sequence: $_winSequence');
           return true;
         }
       }
@@ -151,7 +180,11 @@ class TicTacToeGameModel extends ChangeNotifier {
         }
 
         if (hasWinningSequence) {
-          debugPrint('Winning sequence found in diagonal');
+          _winSequence =
+              List.generate(winLength, (index) => [row - index, col + index]);
+          finishGame();
+          debugPrint(
+              'Winning sequence found in diagonal, sequence: $_winSequence');
           return true;
         }
       }
@@ -344,6 +377,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     } else if (_levelDifficulty == 'hard') {
       aiHardMove();
     }
+    setPlayerTurn(true);
   }
 
   bool isBoardFull() {
