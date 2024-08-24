@@ -26,7 +26,9 @@ class TicTacToeGameModel extends ChangeNotifier {
   int _gridSizeInt = 3;
   List<List<int>> _winSequence = [];
   bool _isGameFinished = false;
+  bool _clickedInNewCell = false;
 
+  bool get clickedInNewCell => _clickedInNewCell;
   bool get isGameFinished => _isGameFinished;
   List<List<int>> get winSequence => _winSequence;
   List<List<String>> get board => _board;
@@ -81,8 +83,10 @@ class TicTacToeGameModel extends ChangeNotifier {
       _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
       debugPrint('Current player: $_currentPlayer');
 
+      _clickedInNewCell = true;
       return true;
     }
+    _clickedInNewCell = false;
     return false;
   }
 

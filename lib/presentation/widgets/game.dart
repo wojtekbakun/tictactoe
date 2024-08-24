@@ -57,16 +57,18 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                     // place X or O in the cell
                     GestureDetector(
                       onTap: () {
-                        gameModel.isPlayerTurn
-                            ? setState(() {
-                                gameModel.makeMove(i, j);
-                                gameModel.setPlayerTurn(false);
-                              })
-                            : gameModel.isPlayerVsAI
+                        setState(() {
+                          gameModel.makeMove(i, j);
+                          gameModel.setPlayerTurn(false);
+                        });
+                        gameModel.isPlayerVsAI
+                            ? gameModel.clickedInNewCell
                                 ? gameModel.aiMove()
-                                : null;
+                                : null
+                            : null;
 
                         // ai moves only when button is clicked
+                        // ai moves on every click even if player clicked on the same cell
                       },
                       child: Container(
                         width: screenWidth / gridSize,
