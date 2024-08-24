@@ -19,13 +19,8 @@ class WinningLinePainter extends CustomPainter {
       ..strokeWidth = cellSize / 10
       ..strokeCap = StrokeCap.round;
 
-    double cellPosition() => cellSize + cellSize / 2;
     double centerAdjust() => screenWidth / 2 - 24; // center + padding
 
-    debugPrint(
-        'screenWidgth: $screenWidth cellPosition: ${cellPosition()}, centerAdjust: ${centerAdjust()}');
-    debugPrint(
-        'start position of first cell: ${winningSequence.first[1] * cellPosition() - centerAdjust()}');
     // Pobierz współrzędne pierwszego i ostatniego punktu zwycięskiej sekwencji
     final start = Offset(
       winningSequence.first[1] * cellSize + cellSize / 2 - centerAdjust(),

@@ -5,6 +5,7 @@ class Gameplay extends ChangeNotifier {
   double _floatRange = 0;
   double _floatSpeed = 0;
   int _gridSize = 3;
+
   int get gridSize => _gridSize;
   double get floatRange => _floatRange;
   double get floatSpeed => _floatSpeed;

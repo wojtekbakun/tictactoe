@@ -5,8 +5,6 @@ import 'package:tictactoe/domain/config/game_repo.dart';
 
 class TicTacToeGameModel extends ChangeNotifier {
   //Scores
-  int xScore = 0;
-  int yScore = 0;
 
   String winningMessage = '';
 
@@ -19,7 +17,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     ['', '', ''],
   ];
   String _currentPlayer = 'X';
-  String _winner = '';
+  String _winner = 'X';
   bool _isPlayerVsAI = false;
   String _levelDifficulty = 'easy';
   String _gridSize = '3x3';
@@ -38,6 +36,11 @@ class TicTacToeGameModel extends ChangeNotifier {
   String get levelDifficulty => _levelDifficulty;
   String get gridSize => _gridSize;
   int get gridSizeInt => _gridSizeInt;
+
+  int _scoreX = 0;
+  int _scoreY = 0;
+  int get scoreX => _scoreX;
+  int get scoreO => _scoreY;
 
   void setBoardSize(int size, String? gridSize) {
     _board = List.generate(size, (_) => List.filled(size, ''));
@@ -60,8 +63,15 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   void finishGame() {
-    debugPrint('Game finished ----------------');
+    debugPrint('Game finished ----------------, winner: $_winner');
     _isGameFinished = true;
+    if (_winner == 'X') {
+      _scoreX++;
+      debugPrint('incrementing score X');
+    } else if (_winner == 'O') {
+      _scoreY++;
+      debugPrint('incrementing score Y');
+    }
     notifyListeners();
   }
 
@@ -75,14 +85,13 @@ class TicTacToeGameModel extends ChangeNotifier {
       _board[i][j] = _currentPlayer;
       if (checkWinner()) {
         _winner = _currentPlayer;
+        finishGame();
         debugPrint('Winner: $_winner');
       } else if (isBoardFull()) {
         _winner = 'DRAW';
         debugPrint('Winner: $_winner');
       }
       _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
-      debugPrint('Current player: $_currentPlayer');
-
       _clickedInNewCell = true;
       return true;
     }
@@ -99,9 +108,6 @@ class TicTacToeGameModel extends ChangeNotifier {
       return symbol == _currentPlayer || symbol == playerSuper;
     }
 
-    debugPrint(
-        'gridSize: $_gridSize, gridSizeInt: $_gridSizeInt, winLength: $winLength');
-
     // check rows
     for (int row = 0; row < _gridSizeInt; row++) {
       for (int col = 0; col <= _gridSizeInt - winLength; col++) {
@@ -117,7 +123,6 @@ class TicTacToeGameModel extends ChangeNotifier {
         if (hasWinningSequence) {
           _winSequence =
               List.generate(winLength, (index) => [row, col + index]);
-          finishGame();
           debugPrint(
               'Winning sequence found in row $row, sequence: $_winSequence');
           return true;
@@ -140,7 +145,6 @@ class TicTacToeGameModel extends ChangeNotifier {
         if (hasWinningSequence) {
           _winSequence =
               List.generate(winLength, (index) => [row + index, col]);
-          finishGame();
           debugPrint(
               'Winning sequence found in column $col, sequence: $_winSequence');
           return true;
@@ -163,7 +167,6 @@ class TicTacToeGameModel extends ChangeNotifier {
         if (hasWinningSequence) {
           _winSequence =
               List.generate(winLength, (index) => [row + index, col + index]);
-          finishGame();
           debugPrint(
               'Winning sequence found in diagonal sequence: $_winSequence');
           return true;
@@ -186,7 +189,6 @@ class TicTacToeGameModel extends ChangeNotifier {
         if (hasWinningSequence) {
           _winSequence =
               List.generate(winLength, (index) => [row - index, col + index]);
-          finishGame();
           debugPrint(
               'Winning sequence found in diagonal, sequence: $_winSequence');
           return true;
@@ -218,36 +220,36 @@ class TicTacToeGameModel extends ChangeNotifier {
 
   void aiHardMove({String player = 'O', String opponent = 'X'}) {
     int winLength =
-        GameRepo().gameConfigurations[_gridSize]!['win_length'] ?? 3;
+        GameRepo().gameConfigurations[_gridSize]?['win_length'] ?? 3;
 
     // Check for any immediate winning moves first
     for (int row = 0; row < _gridSizeInt; row++) {
-      for (int col = 0; col < _gridSizeInt; col++) {
-        if (_board[row][col] == '') {
-          _board[row][col] = player;
+      for (int col = 0; col < gridSizeInt; col++) {
+        if (board[row][col] == '') {
+          // Attempt to place the player's symbol and check for a win
+          board[row][col] = player;
           if (checkWinner()) {
-            _board[row][col] = ''; // Reset the board after checking
-            makeMove(row, col); // Execute the winning move
-            debugPrint('interm move');
-            return;
+            board[row][col] = ''; // Reset the board after checking
+            makeMove(col, row); // Execute the winning move
+            debugPrint('winning move');
           }
-          _board[row][col] = ''; // Reset if not a winning move
+          board[row][col] = ''; // Reset if not a winning move
         }
       }
     }
 
     // If no winning move is found, check for necessary blocks
-    for (int row = 0; row < _gridSizeInt; row++) {
-      for (int col = 0; col < _gridSizeInt; col++) {
-        if (_board[row][col] == '') {
-          _board[row][col] = opponent;
+    for (int row = 0; row < gridSizeInt; row++) {
+      for (int col = 0; col < gridSizeInt; col++) {
+        if (board[row][col] == '') {
+          // Attempt to place the opponent's symbol and check for a win
+          board[row][col] = opponent;
           if (checkWinner()) {
-            _board[row][col] = ''; // Reset the board after checking
-            makeMove(row, col); // Block the opponent
-            debugPrint('blocked move');
-            return;
+            board[row][col] = ''; // Reset the board after checking
+            makeMove(col, row); // Block the opponent
+            debugPrint('blocking move');
           }
-          _board[row][col] = ''; // Reset if not a blocking move
+          board[row][col] = ''; // Reset if not a blocking move
         }
       }
     }
@@ -258,7 +260,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     if (strategicPositions.isNotEmpty) {
       List<int> move =
           strategicPositions[Random().nextInt(strategicPositions.length)];
-      debugPrint('stratefgic move');
+      debugPrint('strategic move');
       makeMove(move[0], move[1]); // Execute the strategic move
       return;
     }
@@ -301,7 +303,7 @@ class TicTacToeGameModel extends ChangeNotifier {
 
     for (int row = 0; row < gridSize; row++) {
       for (int col = 0; col < gridSize; col++) {
-        if (board[row][col] == null) {
+        if (board[row][col] == '') {
           // Check from empty spots
           for (List<int> d in directions) {
             int sequenceLength = 0;
@@ -338,14 +340,14 @@ class TicTacToeGameModel extends ChangeNotifier {
                 backR < gridSize &&
                 backC >= 0 &&
                 backC < gridSize &&
-                board[backR][backC] == null) {
+                board[backR][backC] == '') {
               openEnds++;
             }
             if (forwardR >= 0 &&
                 forwardR < gridSize &&
                 forwardC >= 0 &&
                 forwardC < gridSize &&
-                board[forwardR][forwardC] == null) {
+                board[forwardR][forwardC] == '') {
               openEnds++;
             }
 
@@ -357,6 +359,8 @@ class TicTacToeGameModel extends ChangeNotifier {
           }
         }
       }
+      debugPrint(
+          'criticalThreats: $criticalThreats, potentialThreats: $potentialThreats');
     }
 
     // Return threats, prioritizing critical threats first
@@ -392,10 +396,16 @@ class TicTacToeGameModel extends ChangeNotifier {
     return true;
   }
 
+  void resetScore() {
+    _scoreX = 0;
+    _scoreY = 0;
+    notifyListeners();
+  }
+
   void resetGame() {
     _board = List.generate(_gridSizeInt, (_) => List.filled(_gridSizeInt, ''));
     _currentPlayer = 'X';
-    _winner = '';
+    _winner = 'X';
     _isGameFinished = false;
     notifyListeners();
   }

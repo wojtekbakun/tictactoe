@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/data/providers/ad_settings.dart';
+import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/game.dart';
+import 'package:tictactoe/presentation/widgets/points_to_win.dart';
 import 'package:tictactoe/presentation/widgets/results_panel.dart';
 import 'package:tictactoe/presentation/widgets/score.dart';
 import 'package:tictactoe/presentation/widgets/winning_sequence_painter.dart';
@@ -21,70 +23,92 @@ class _GameScreenState extends State<GameScreen> {
     final adModel = context.watch<AdSettings>();
     final screenWidth = MediaQuery.of(context).size.width;
     final gridSize = gameModel.gridSizeInt;
+    int winLength =
+        GameRepo().gameConfigurations[gameModel.gridSize]?['win_length'] ?? 3;
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Score(
-                    xScore: 0,
-                    yScore: 0,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('BACK'),
-                  ),
-                ],
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/sky.jpg'),
+                fit: BoxFit.cover,
               ),
-              gameModel.isGameFinished
-                  ? ResultsPanel(
-                      screenWidth: screenWidth,
-                      gameModel: gameModel,
-                    )
-                  : SizedBox(
-                      height: screenWidth / 2,
-                    ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
+            ),
+          ),
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Game(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Score(
+                            xScore: gameModel.scoreX,
+                            oScore: gameModel.scoreO,
+                          ),
+                          PointsToWin(pointsToWin: winLength.toString()),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              gameModel.resetGame();
+                            },
+                            child: const Text('BACK'),
+                          ),
+                        ],
+                      ),
                       gameModel.isGameFinished
-                          ? CustomPaint(
-                              size: const Size(
-                                1,
-                                1,
-                              ),
-                              painter: WinningLinePainter(
-                                winningSequence: gameModel.winSequence,
-                                cellSize: (screenWidth - 48) / gridSize,
-                                screenWidth: screenWidth,
-                              ),
+                          ? ResultsPanel(
+                              screenWidth: screenWidth,
+                              gameModel: gameModel,
                             )
-                          : const SizedBox(),
+                          : SizedBox(
+                              height: screenWidth / 2,
+                            ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const Game(),
+                              gameModel.isGameFinished
+                                  ? CustomPaint(
+                                      size: const Size(
+                                        1,
+                                        1,
+                                      ),
+                                      painter: WinningLinePainter(
+                                        winningSequence: gameModel.winSequence,
+                                        cellSize: (screenWidth - 48) / gridSize,
+                                        screenWidth: screenWidth,
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Image.asset(
+                          adModel.adPath,
+                          height: gridSize == 3 ? 20 : 50,
+                        ),
+                      ),
                     ],
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Image.asset(
-                  adModel.adPath,
-                  height: gridSize == 3 ? 20 : 50,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

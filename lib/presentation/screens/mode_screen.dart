@@ -20,6 +20,8 @@ class ModeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/grid');
                 gameModel.setPlayerVsAI(true);
+                gameModel.resetScore();
+                gameModel.resetGame();
               },
             ),
             Button(
@@ -27,6 +29,8 @@ class ModeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/grid');
                 gameModel.setPlayerVsAI(false);
+                gameModel.resetScore();
+                gameModel.resetGame();
               },
             ),
           ],
