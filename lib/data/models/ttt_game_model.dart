@@ -393,8 +393,10 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   void resetGame() {
-    _board = List.generate(3, (_) => List.filled(3, ''));
+    _board = List.generate(_gridSizeInt, (_) => List.filled(_gridSizeInt, ''));
     _currentPlayer = 'X';
     _winner = '';
+    _isGameFinished = false;
+    notifyListeners();
   }
 }

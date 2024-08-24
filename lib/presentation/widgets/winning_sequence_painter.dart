@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 class WinningLinePainter extends CustomPainter {
   final List<List<int>> winningSequence;
   final double cellSize;
+  final double screenWidth;
 
-  WinningLinePainter({required this.winningSequence, required this.cellSize});
+  WinningLinePainter(
+      {required this.winningSequence,
+      required this.cellSize,
+      required this.screenWidth});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -12,17 +16,24 @@ class WinningLinePainter extends CustomPainter {
 
     final paint = Paint()
       ..color = Colors.red
-      ..strokeWidth = 4.0
+      ..strokeWidth = cellSize / 10
       ..strokeCap = StrokeCap.round;
 
+    double cellPosition() => cellSize + cellSize / 2;
+    double centerAdjust() => screenWidth / 2 - 24; // center + padding
+
+    debugPrint(
+        'screenWidgth: $screenWidth cellPosition: ${cellPosition()}, centerAdjust: ${centerAdjust()}');
+    debugPrint(
+        'start position of first cell: ${winningSequence.first[1] * cellPosition() - centerAdjust()}');
     // Pobierz współrzędne pierwszego i ostatniego punktu zwycięskiej sekwencji
     final start = Offset(
-      winningSequence.first[1] * cellSize + cellSize / 2,
-      winningSequence.first[0] * cellSize + cellSize / 2,
+      winningSequence.first[1] * cellSize + cellSize / 2 - centerAdjust(),
+      winningSequence.first[0] * cellSize + cellSize / 2 - centerAdjust(),
     );
     final end = Offset(
-      winningSequence.last[1] * cellSize + cellSize / 2,
-      winningSequence.last[0] * cellSize + cellSize / 2,
+      winningSequence.last[1] * cellSize + cellSize / 2 - centerAdjust(),
+      winningSequence.last[0] * cellSize + cellSize / 2 - centerAdjust(),
     );
 
     // Narysuj linię
