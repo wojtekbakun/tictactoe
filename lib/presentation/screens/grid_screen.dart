@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
+import 'package:tictactoe/data/providers/ad_settings.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
 import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/button.dart';
@@ -23,6 +24,7 @@ class GridScreen extends StatelessWidget {
     //final game = context.watch<Game>();
     final gameModel = context.watch<TicTacToeGameModel>();
     final gameplay = context.watch<Gameplay>();
+    final adModel = context.watch<AdSettings>();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -63,6 +65,7 @@ class GridScreen extends StatelessWidget {
                                     ?['grid_size'] ??
                                 3,
                           );
+                          adModel.setImagePath(gridSize);
                           debugPrint('Grid size: $gridSize');
                         },
                       ),

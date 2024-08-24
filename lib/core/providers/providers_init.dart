@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
-import 'package:tictactoe/data/providers/game_settiings.dart';
+import 'package:tictactoe/data/providers/ad_settings.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
 
 class ProvidersInit extends StatelessWidget {
@@ -12,7 +12,7 @@ class ProvidersInit extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GameSettiings()),
+        ChangeNotifierProvider(create: (context) => AdSettings()),
         ChangeNotifierProvider(create: (context) => TicTacToeGameModel()),
         ChangeNotifierProvider(create: (context) => Gameplay()),
       ],
