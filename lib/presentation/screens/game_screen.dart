@@ -7,7 +7,9 @@ import 'package:tictactoe/presentation/widgets/game.dart';
 import 'package:tictactoe/presentation/widgets/points_to_win.dart';
 import 'package:tictactoe/presentation/widgets/results_panel.dart';
 import 'package:tictactoe/presentation/widgets/score.dart';
+import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 import 'package:tictactoe/presentation/widgets/winning_sequence_painter.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -25,6 +27,8 @@ class _GameScreenState extends State<GameScreen> {
     final gridSize = gameModel.gridSizeInt;
     int winLength =
         GameRepo().gameConfigurations[gameModel.gridSize]?['win_length'] ?? 3;
+
+    final soundManager = SoundManager();
 
     return Scaffold(
       body: Stack(
@@ -56,6 +60,8 @@ class _GameScreenState extends State<GameScreen> {
                           PointsToWin(pointsToWin: winLength.toString()),
                           ElevatedButton(
                             onPressed: () {
+                              soundManager.playEffectSound(
+                                  'sounds/click_sound_effect.mp3');
                               Navigator.pop(context);
                               gameModel.resetGame();
                             },
@@ -68,9 +74,7 @@ class _GameScreenState extends State<GameScreen> {
                               screenWidth: screenWidth,
                               gameModel: gameModel,
                             )
-                          : SizedBox(
-                              height: screenWidth / 2,
-                            ),
+                          : const SizedBox(),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

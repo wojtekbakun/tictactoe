@@ -47,7 +47,7 @@ class Gameplay extends ChangeNotifier {
 
   void initializeFloatSettings() {
     double baseFloatRange = 10;
-    double baseFloatSpeed = 0.2;
+    double baseFloatSpeed = 0.5;
 
     _floatRange = baseFloatRange * (3 / _gridSize);
     _floatSpeed = baseFloatSpeed * (3 / _gridSize);

@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -39,8 +40,6 @@ flutter:
     - assets/images/number_7.png
     - assets/images/number_8.jpg
     - assets/images/number_9.jpg
-
-    #sounds
     - assets/sounds/background_music.wav
     - assets/sounds/bubble_pop.wav
     - assets/sounds/click_sound_effect.mp3

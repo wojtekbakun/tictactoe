@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
 import 'package:tictactoe/presentation/widgets/get_symbol_image.dart';
+import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -200,6 +198,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     final gameplay = context.watch<Gameplay>();
     final gridSize = gameModel.gridSizeInt;
     final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
+    final soundManager = SoundManager();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -216,6 +216,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                     // place X or O in the cell
                     GestureDetector(
                       onTap: () {
+                        soundManager.playEffectSound('sounds/bubble_pop.wav');
                         gameModel.isGameFinished
                             ? null
                             : {
