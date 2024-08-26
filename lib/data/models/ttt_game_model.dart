@@ -367,7 +367,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     return criticalThreats.isNotEmpty ? criticalThreats : potentialThreats;
   }
 
-  void aiMove() {
+  void aiMove() async {
     List<List<int>> emptyCells = [];
 
     for (int row = 0; row < _gridSizeInt; row++) {
@@ -379,11 +379,17 @@ class TicTacToeGameModel extends ChangeNotifier {
     }
 
     if (_levelDifficulty == 'easy') {
-      aiEasyMove();
+      await Future.delayed(Durations.medium1, () {
+        aiEasyMove();
+      });
     } else if (_levelDifficulty == 'medium') {
-      aiEasyMove();
+      await Future.delayed(Durations.medium1, () {
+        aiEasyMove();
+      });
     } else if (_levelDifficulty == 'hard') {
-      aiHardMove();
+      await Future.delayed(Durations.medium1, () {
+        aiHardMove();
+      });
     }
     setPlayerTurn(true);
   }

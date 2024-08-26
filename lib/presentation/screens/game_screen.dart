@@ -9,7 +9,6 @@ import 'package:tictactoe/presentation/widgets/results_panel.dart';
 import 'package:tictactoe/presentation/widgets/score.dart';
 import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 import 'package:tictactoe/presentation/widgets/winning_sequence_painter.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});

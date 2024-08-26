@@ -226,7 +226,9 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                                 }),
                                 gameModel.isPlayerVsAI
                                     ? gameModel.clickedInNewCell
-                                        ? gameModel.aiMove()
+                                        ? gameModel.isGameFinished
+                                            ? null
+                                            : gameModel.aiMove()
                                         : null
                                     : null
                               };
