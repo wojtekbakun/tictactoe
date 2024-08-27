@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
@@ -12,17 +13,30 @@ class ModeScreen extends StatefulWidget {
 }
 
 class _ModeScreenState extends State<ModeScreen> {
+  late final TicTacToeGameModel gameModel;
+  late final SoundManager soundManager;
+
   @override
   void initState() {
-    SoundManager().playBackgroundMusic('sounds/background_music.wav');
     super.initState();
+    gameModel = context.read<TicTacToeGameModel>();
+    soundManager = context.read<SoundManager>();
+
+    // Sprawdzenie stanu odtwarzacza i odpowiednia reakcja
+    if (soundManager.getBackgroundPlayerState() != PlayerState.playing) {
+      soundManager.playBackgroundMusic('sounds/background_music.wav');
+    }
+  }
+
+  @override
+  void dispose() {
+    // Zatrzymanie muzyki przy wyjściu z ekranu
+    soundManager.stopBackgroundMusic();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final gameModel = context.watch<TicTacToeGameModel>();
-    final soundManager = SoundManager();
-
     return Scaffold(
       body: Center(
         child: Column(

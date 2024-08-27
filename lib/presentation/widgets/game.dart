@@ -14,6 +14,7 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  final soundManager = SoundManager();
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
+    soundManager.disposePlayers();
     super.dispose();
   }
 
