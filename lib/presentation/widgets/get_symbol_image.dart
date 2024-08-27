@@ -11,6 +11,12 @@ class SymbolImage extends StatelessWidget {
         ? Image.asset(MyConsts.bubblePath)
         : currentPlayer == 'X'
             ? Image.asset(MyConsts.xBubblePath)
-            : Image.asset(MyConsts.oBubblePath);
+            : currentPlayer == 'Super X'
+                ? Image.asset(MyConsts.superXBubblePath)
+                : currentPlayer == 'O'
+                    ? Image.asset(MyConsts.oBubblePath)
+                    : currentPlayer == 'Super O'
+                        ? Image.asset(MyConsts.superOBubblePath)
+                        : Image.asset(MyConsts.bubblePath);
   }
 }

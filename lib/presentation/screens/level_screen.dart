@@ -45,7 +45,9 @@ class LevelScreen extends StatelessWidget {
                         onPressed: () {
                           soundManager
                               .playEffectSound('sounds/click_sound_effect.mp3');
-                          Navigator.pushNamed(context, '/game');
+                          level == 'hard'
+                              ? Navigator.pushNamed(context, '/splash')
+                              : Navigator.pushNamed(context, '/game');
                           gameModel.setLevelDifficulty(level);
                         },
                       ),
