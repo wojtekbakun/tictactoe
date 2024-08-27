@@ -394,7 +394,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     return criticalThreats.isNotEmpty ? criticalThreats : potentialThreats;
   }
 
-  void aiMove() async {
+  Future aiMove() async {
     List<List<int>> emptyCells = [];
 
     for (int row = 0; row < _gridSizeInt; row++) {
@@ -419,6 +419,7 @@ class TicTacToeGameModel extends ChangeNotifier {
       });
     }
     setPlayerTurn(true);
+    return null;
   }
 
   bool isBoardFull() {

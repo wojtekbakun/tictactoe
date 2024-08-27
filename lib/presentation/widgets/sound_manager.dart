@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class SoundManager extends ChangeNotifier {
   final AudioPlayer _backgroundPlayer = AudioPlayer();
   final AudioPlayer _effectPlayer = AudioPlayer();
+  final AudioPlayer _effectPlayer2 = AudioPlayer();
 
   AudioPlayer get backgroundPlayer => _backgroundPlayer;
   AudioPlayer get effectPlayer => _effectPlayer;
@@ -11,11 +12,16 @@ class SoundManager extends ChangeNotifier {
   Future<void> playBackgroundMusic(String musicPath) async {
     await _backgroundPlayer
         .setReleaseMode(ReleaseMode.loop); // Ustawienie trybu zapętlenia
+    await _backgroundPlayer.setVolume(0.2); // Ustawienie głośności
     await _backgroundPlayer.play(AssetSource(musicPath));
   }
 
   Future<void> playEffectSound(String effectPath) async {
     await _effectPlayer.play(AssetSource(effectPath));
+  }
+
+  Future<void> playEffect2Sound(String effectPath) async {
+    await _effectPlayer2.play(AssetSource(effectPath));
   }
 
   Future<void> stopBackgroundMusic() async {
@@ -24,11 +30,13 @@ class SoundManager extends ChangeNotifier {
 
   Future<void> stopEffectSound() async {
     await _effectPlayer.stop();
+    await _effectPlayer2.stop();
   }
 
   Future<void> disposePlayers() async {
     await _backgroundPlayer.dispose();
     await _effectPlayer.dispose();
+    await _effectPlayer2.dispose();
   }
 
   PlayerState getBackgroundPlayerState() {

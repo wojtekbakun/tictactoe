@@ -45,22 +45,26 @@ class _ModeScreenState extends State<ModeScreen> {
           children: [
             Button(
               text: 'Player vs AI',
-              onPressed: () {
-                soundManager.playEffectSound('sounds/click_sound_effect.mp3');
-                Navigator.pushNamed(context, '/grid');
+              onPressed: () async {
+                await soundManager
+                    .playEffectSound('sounds/click_sound_effect.mp3');
                 gameModel.setPlayerVsAI(true);
                 gameModel.resetScore();
                 gameModel.resetGame();
+                if (!context.mounted) return;
+                Navigator.pushNamed(context, '/grid');
               },
             ),
             Button(
               text: 'Player vs Player',
-              onPressed: () {
-                soundManager.playEffectSound('sounds/click_sound_effect.mp3');
-                Navigator.pushNamed(context, '/grid');
+              onPressed: () async {
+                await soundManager
+                    .playEffectSound('sounds/click_sound_effect.mp3');
                 gameModel.setPlayerVsAI(false);
                 gameModel.resetScore();
                 gameModel.resetGame();
+                if (!context.mounted) return;
+                Navigator.pushNamed(context, '/grid');
               },
             ),
           ],

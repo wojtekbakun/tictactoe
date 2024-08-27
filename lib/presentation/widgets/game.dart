@@ -217,11 +217,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                   for (var cols = 0; cols < gridSize; cols++)
                     // place X or O in the cell
                     GestureDetector(
-                      onTap: () {
-                        soundManager.playEffectSound('sounds/bubble_pop.wav');
+                      onTap: () async {
                         gameModel.isGameFinished
                             ? null
                             : {
+                                await soundManager
+                                    .playEffectSound('sounds/bubble_pop.wav'),
                                 setState(() {
                                   gameModel.makeMove(rows, cols);
                                   gameModel.setPlayerTurn(false);
@@ -230,7 +231,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                                     ? gameModel.clickedInNewCell
                                         ? gameModel.isGameFinished
                                             ? null
-                                            : gameModel.aiMove()
+                                            : {
+                                                await gameModel.aiMove(),
+                                                await soundManager
+                                                    .playEffect2Sound(
+                                                        'sounds/bubble_pop.wav'),
+                                              }
                                         : null
                                     : null
                               };
