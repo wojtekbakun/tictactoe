@@ -222,18 +222,13 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                     GestureDetector(
                       onTap: () async {
                         if (!gameModel.isGameFinished) {
-                          await soundManager
-                              .playEffectSound('sounds/bubble_pop.wav');
-                          await gameModel.makeMove(rows, cols);
-                          gameModel.setPlayerTurn(false);
+                          await gameModel.makeMove(rows, cols,
+                              soundManager: soundManager);
 
                           if (gameModel.isPlayerVsAI &&
-                              gameModel.clickedInNewCell &&
-                              !gameModel.isPlayerTurn) {
+                              gameModel.clickedInNewCell) {
                             if (!gameModel.isGameFinished) {
-                              await gameModel.aiMove();
-                              await soundManager
-                                  .playEffect2Sound('sounds/bubble_pop.wav');
+                              await gameModel.aiMove(soundManager);
                             }
                           }
                         }
