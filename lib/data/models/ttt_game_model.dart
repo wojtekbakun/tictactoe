@@ -25,6 +25,7 @@ class TicTacToeGameModel extends ChangeNotifier {
   bool _clickedInNewCell = false;
   int _scoreX = 0;
   int _scoreY = 0;
+  bool _canClick = true;
 
   // GETTERS
   bool get clickedInNewCell => _clickedInNewCell;
@@ -41,6 +42,7 @@ class TicTacToeGameModel extends ChangeNotifier {
   int get scoreO => _scoreY;
   bool get isMusicPlaying => _isMusicPlaying;
   bool get isPlayerTurn => _isPlayerTurn;
+  bool get canClick => _canClick;
 
   /*
 
@@ -102,6 +104,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     _isPlayerVsAI ? initSuperGame() : null;
     _superOCount = _maxSuperOSymbols;
     _superXCount = _maxSuperXSymbols;
+    _canClick = true;
     notifyListeners();
   }
 
@@ -119,6 +122,7 @@ class TicTacToeGameModel extends ChangeNotifier {
 
   Future<bool> makeMove(int i, int j, {SoundManager? soundManager}) async {
     if (_board[i][j] == '') {
+      _canClick = false;
       debugPrint('Move made at $i, $j: $_currentPlayer');
       await soundManager?.playEffect2Sound('sounds/bubble_pop.wav');
       _currentPlayer == 'X' || _currentPlayer == 'Super X'
@@ -158,25 +162,25 @@ class TicTacToeGameModel extends ChangeNotifier {
     return Future.value(true);
   }
 
-  Future<bool> simpleMove(int i, int j) async {
+  Future<void> simpleMove(int i, int j) async {
     _board[i][j] = _currentPlayer;
     debugPrint('making simple move for $_currentPlayer: $i, $j');
     if (checkWinner(_currentPlayer)) {
       _winner = _currentPlayer;
       finishGame();
       debugPrint('Winner: $_winner');
-      return true;
+      return Future.value();
     } else if (isBoardFull()) {
       _winner = 'DRAW';
       debugPrint('Winner: $_winner');
       finishGame();
-      return true;
+      return Future.value();
     }
 
     debugPrint('Simple move made, current player: $_currentPlayer');
     notifyListeners();
 
-    return true;
+    return Future.value();
   }
 
   bool superMove(int i, int j) {
@@ -532,16 +536,19 @@ class TicTacToeGameModel extends ChangeNotifier {
       await Future.delayed(Durations.long1, () {
         soundManager.playEffectSound('sounds/bubble_pop.wav');
         aiEasyMove();
+        _canClick = true;
       });
     } else if (_levelDifficulty == 'medium') {
       await Future.delayed(Durations.long1, () {
         soundManager.playEffectSound('sounds/bubble_pop.wav');
         aiEasyMove();
+        _canClick = true;
       });
     } else if (_levelDifficulty == 'hard') {
       await Future.delayed(Durations.long1, () {
         soundManager.playEffectSound('sounds/bubble_pop.wav');
         aiHardMove();
+        _canClick = true;
       });
     }
     setPlayerTurn(true);
@@ -678,6 +685,9 @@ class TicTacToeGameModel extends ChangeNotifier {
         setSuperXCount(_superXCount - 1);
       });
     }
+    await Future.delayed(const Duration(milliseconds: 600), () async {
+      _canClick = true;
+    });
     _currentPlayer = _currentPlayer == 'Super X' ? 'O' : 'X';
     debugPrint('-----> SUPER move made, current player: $_currentPlayer');
     setPlayerTurn(false);
@@ -703,10 +713,14 @@ class TicTacToeGameModel extends ChangeNotifier {
         setSuperOCount(_superOCount - 1);
       });
     }
+    await Future.delayed(const Duration(milliseconds: 600), () async {
+      _canClick = true;
+    });
     _currentPlayer = _currentPlayer == 'Super O' ? 'X' : 'O';
     debugPrint('-----> SUPER move made, current player: $_currentPlayer');
     setPlayerTurn(true);
     _placedSuperSymbol = true;
+
     notifyListeners();
     return Future.value();
   }
