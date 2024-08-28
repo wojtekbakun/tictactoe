@@ -3,28 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe/domain/config/game_repo.dart';
 
 class TicTacToeGameModel extends ChangeNotifier {
-  //Scores
-
-  String winningMessage = '';
-
-  bool _isPlayerTurn = true;
-  bool get isPlayerTurn => _isPlayerTurn;
-
+  // SETTINGS
   List<List<String>> _board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', ''],
   ];
-  String _currentPlayer = 'X';
-  String _winner = 'X';
   bool _isPlayerVsAI = false;
   String _levelDifficulty = 'easy';
   String _gridSize = '3x3';
   int _gridSizeInt = 3;
-  List<List<int>> _winSequence = [];
-  bool _isGameFinished = false;
-  bool _clickedInNewCell = false;
+  bool _isMusicPlaying = true;
 
+  // GAMEPLAY
+  bool _isPlayerTurn = true;
+  String _currentPlayer = 'X';
+  String _winner = 'X';
+  bool _isGameFinished = false;
+  List<List<int>> _winSequence = [];
+  bool _clickedInNewCell = false;
+  int _scoreX = 0;
+  int _scoreY = 0;
+
+  // GETTERS
   bool get clickedInNewCell => _clickedInNewCell;
   bool get isGameFinished => _isGameFinished;
   List<List<int>> get winSequence => _winSequence;
@@ -35,14 +36,16 @@ class TicTacToeGameModel extends ChangeNotifier {
   String get levelDifficulty => _levelDifficulty;
   String get gridSize => _gridSize;
   int get gridSizeInt => _gridSizeInt;
-
-  int _scoreX = 0;
-  int _scoreY = 0;
   int get scoreX => _scoreX;
   int get scoreO => _scoreY;
-
-  bool _isMusicPlaying = true;
   bool get isMusicPlaying => _isMusicPlaying;
+  bool get isPlayerTurn => _isPlayerTurn;
+
+  /*
+
+  HELPERS
+
+  */
 
   void setMusicPlaying(bool isPlaying) {
     _isMusicPlaying = isPlaying;
@@ -70,23 +73,44 @@ class TicTacToeGameModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void finishGame() {
-    debugPrint('Game finished ----------------, winner: $_winner');
-    _isGameFinished = true;
-    if (_winner == 'X') {
-      _scoreX++;
-      debugPrint('incrementing score X');
-    } else if (_winner == 'O') {
-      _scoreY++;
-      debugPrint('incrementing score Y');
-    }
-    notifyListeners();
-  }
-
   void setPlayerTurn(bool isPlayerTurn) {
     _isPlayerTurn = isPlayerTurn;
     notifyListeners();
   }
+
+  bool isBoardFull() {
+    for (var row in board) {
+      if (row.contains('')) return false;
+    }
+    debugPrint('Board is full');
+    return true;
+  }
+
+  void resetScore() {
+    _scoreX = 0;
+    _scoreY = 0;
+    notifyListeners();
+  }
+
+  void resetGame() {
+    _board = List.generate(_gridSizeInt, (_) => List.filled(_gridSizeInt, ''));
+    _currentPlayer = 'X';
+    _winner = 'X';
+    _isGameFinished = false;
+    notifyListeners();
+  }
+
+  /*
+
+  END OF SETTINGS
+
+  */
+
+  /*
+
+  ==================================== GAMEPLAY
+
+  */
 
   bool makeMove(int i, int j) {
     if (_board[i][j] == '') {
@@ -212,6 +236,22 @@ class TicTacToeGameModel extends ChangeNotifier {
 
     return false;
   }
+
+  void finishGame() {
+    debugPrint('Game finished ----------------, winner: $_winner');
+    _isGameFinished = true;
+    if (_winner == 'X') {
+      _scoreX++;
+      debugPrint('incrementing score X');
+    } else if (_winner == 'O') {
+      _scoreY++;
+      debugPrint('incrementing score Y');
+    }
+    notifyListeners();
+  }
+  //  ==============================================
+  //  ============================================== AI
+  //  ==============================================
 
   void aiFirstMove() {
     int center = _gridSizeInt ~/ 2;
@@ -439,27 +479,5 @@ class TicTacToeGameModel extends ChangeNotifier {
     }
     setPlayerTurn(true);
     return null;
-  }
-
-  bool isBoardFull() {
-    for (var row in board) {
-      if (row.contains('')) return false;
-    }
-    debugPrint('Board is full');
-    return true;
-  }
-
-  void resetScore() {
-    _scoreX = 0;
-    _scoreY = 0;
-    notifyListeners();
-  }
-
-  void resetGame() {
-    _board = List.generate(_gridSizeInt, (_) => List.filled(_gridSizeInt, ''));
-    _currentPlayer = 'X';
-    _winner = 'X';
-    _isGameFinished = false;
-    notifyListeners();
   }
 }
