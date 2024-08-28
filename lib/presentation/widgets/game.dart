@@ -14,7 +14,6 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
   final soundManager = SoundManager();
   late int lateGridNumber;
   late String lateDifficulty;
@@ -22,15 +21,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    Provider.of<Gameplay>(context, listen: false).initializeFloatSettings();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 16),
-    )..addListener(
-        Provider.of<Gameplay>(context, listen: false).updateBubblePositions);
-
-    _animationController
-        .repeat(); // Powoduje powtarzanie animacji w nieskończoność
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TicTacToeGameModel>().initSuperGame();
@@ -43,8 +33,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
     soundManager.disposePlayers();
+    debugPrint('Game disposed');
     super.dispose();
   }
 
@@ -226,35 +216,32 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
               Row(
                 children: [
                   // create 3 columns for each row
+                  // create 3 columns for each row
                   for (var cols = 0; cols < gridSize; cols++)
                     // place X or O in the cell
                     GestureDetector(
                       onTap: () async {
-                        gameModel.isGameFinished
-                            ? null
-                            : {
-                                await soundManager
-                                    .playEffectSound('sounds/bubble_pop.wav'),
-                                setState(() {
-                                  gameModel.makeMove(rows, cols);
-                                  gameModel.setPlayerTurn(false);
-                                }),
-                                gameModel.isPlayerVsAI
-                                    ? gameModel.clickedInNewCell
-                                        ? gameModel.isGameFinished
-                                            ? null
-                                            : {
-                                                await gameModel.aiMove(),
-                                                await soundManager
-                                                    .playEffect2Sound(
-                                                        'sounds/bubble_pop.wav'),
-                                              }
-                                        : null
-                                    : null
-                              };
-                        // ai moves only when button is clicked
-                        // ai moves on every click even if player clicked on the same cell
+                        if (!gameModel.isGameFinished) {
+                          await soundManager
+                              .playEffectSound('sounds/bubble_pop.wav');
+                          await gameModel.makeMove(rows, cols);
+                          gameModel.setPlayerTurn(false);
+
+                          if (gameModel.isPlayerVsAI &&
+                              gameModel.clickedInNewCell &&
+                              !gameModel.isPlayerTurn) {
+                            if (!gameModel.isGameFinished) {
+                              await gameModel.aiMove();
+                              await soundManager
+                                  .playEffect2Sound('sounds/bubble_pop.wav');
+                            }
+                          }
+                        }
                       },
+
+                      // ai moves only when button is clicked
+                      // ai moves on every click even if player clicked on the same cell
+
                       child: Container(
                         width: screenWidth / gridSize,
                         height: screenWidth / gridSize,

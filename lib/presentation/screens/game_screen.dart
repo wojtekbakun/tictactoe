@@ -61,7 +61,7 @@ class _GameScreenState extends State<GameScreen> {
                             onPressed: () {
                               soundManager.playEffectSound(
                                   'sounds/click_sound_effect.mp3');
-                              Navigator.pushNamed(context, '/mode');
+                              Navigator.pushReplacementNamed(context, '/mode');
                               gameModel.resetGame();
                             },
                             child: const Text('BACK'),
