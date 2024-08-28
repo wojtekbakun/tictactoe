@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
+import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/get_symbol_image.dart';
 import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
@@ -15,6 +16,8 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   final soundManager = SoundManager();
+  late int lateGridNumber;
+  late String lateDifficulty;
 
   @override
   void initState() {
@@ -30,9 +33,11 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
         .repeat(); // Powoduje powtarzanie animacji w nieskończoność
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //context.read<TicTacToeGameModel>().initSuperGame();
+      context.read<TicTacToeGameModel>().initSuperGame();
       context.read<TicTacToeGameModel>().aiFirstMove();
-      //context.read<TicTacToeGameModel>().setMaxSuperSymbols(3);
+      context.read<TicTacToeGameModel>().setMaxSuperSymbols(
+            GameRepo().getSuperBubbleMax(lateDifficulty, lateGridNumber),
+          );
     });
   }
 
@@ -206,6 +211,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     final gridSize = gameModel.gridSizeInt;
     final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
     final soundManager = SoundManager();
+    lateDifficulty = gameModel.levelDifficulty;
+    lateGridNumber = gameModel.gridSizeInt;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

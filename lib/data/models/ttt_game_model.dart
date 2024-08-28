@@ -114,27 +114,64 @@ class TicTacToeGameModel extends ChangeNotifier {
 
   bool makeMove(int i, int j) {
     if (_board[i][j] == '') {
-      _board[i][j] = _currentPlayer;
-      if (checkWinner(_currentPlayer)) {
-        _winner = _currentPlayer;
-        finishGame();
-        debugPrint('Winner: $_winner');
-        return true;
-      } else if (isBoardFull()) {
-        _winner = 'DRAW';
-        debugPrint('Winner: $_winner');
-        finishGame();
-        return true;
-      }
-      _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
+      debugPrint('Move made at $i, $j: $_currentPlayer');
+      shouldMakeSuperMove()
+          ? {makeSuperMove(i, j), debugPrint('making super move')}
+          : {
+              simpleMove(i, j),
+              _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X',
+              debugPrint('making simple move')
+            };
+      // simpleMove(i, j);
+      // shouldMakeSuperMove()
+      //     ? {makeSuperMove(i, j), debugPrint('making super move')}
+      //     : debugPrint('not making super move');
       _clickedInNewCell = true;
-      notifyListeners();
 
       return true;
     }
-
     _clickedInNewCell = false;
     return false;
+  }
+
+  bool simpleMove(int i, int j) {
+    _board[i][j] = _currentPlayer;
+    debugPrint('making simple move');
+    if (checkWinner(_currentPlayer)) {
+      _winner = _currentPlayer;
+      finishGame();
+      debugPrint('Winner: $_winner');
+      return true;
+    } else if (isBoardFull()) {
+      _winner = 'DRAW';
+      debugPrint('Winner: $_winner');
+      finishGame();
+      return true;
+    }
+
+    debugPrint('Simple move made, current player: $_currentPlayer');
+    notifyListeners();
+
+    return true;
+  }
+
+  bool superMove(int i, int j) {
+    _board[i][j] = _currentPlayer;
+    if (checkWinner(_currentPlayer)) {
+      _winner = _currentPlayer;
+      finishGame();
+      debugPrint('Winner: $_winner');
+      return true;
+    } else if (isBoardFull()) {
+      _winner = 'DRAW';
+      debugPrint('Winner: $_winner');
+      finishGame();
+      return true;
+    }
+
+    _clickedInNewCell = true;
+    notifyListeners();
+    return true;
   }
 
   bool checkWinner(String player) {
@@ -255,20 +292,22 @@ class TicTacToeGameModel extends ChangeNotifier {
 
   void aiFirstMove() {
     int center = _gridSizeInt ~/ 2;
-    if (_board[center][center] == '' && _levelDifficulty == 'hard') {
-      _currentPlayer = 'O';
-      makeMove(center, center);
-    } else {
-      bool randomBool = Random().nextBool();
-      if (randomBool) {
-        _currentPlayer = 'Super O';
+    if (_isPlayerVsAI) {
+      if (_board[center][center] == '' && _levelDifficulty == 'hard') {
+        _currentPlayer = 'O';
+        debugPrint('AI first move: $_currentPlayer');
         makeMove(center, center);
       } else {
-        _currentPlayer = 'O';
-        makeMove(center, center);
+        bool randomBool = Random().nextBool();
+        if (randomBool) {
+          _currentPlayer = 'Super O';
+          makeMove(center, center);
+        } else {
+          _currentPlayer = 'O';
+          makeMove(center, center);
+        }
       }
     }
-    debugPrint('AI first move: $_currentPlayer');
   }
 
   void aiEasyMove() {
@@ -479,5 +518,115 @@ class TicTacToeGameModel extends ChangeNotifier {
     }
     setPlayerTurn(true);
     return null;
+  }
+
+  // ==============================================
+  // ==============================================  SUPER BUBBLE
+  // ==============================================
+
+  int _maxSuperSymbols = 0;
+  int _superXCount = 0;
+  //int _superOCount = 0;
+  bool _placedSuperSymbol = false;
+
+  int get superXCount => _superXCount;
+  //int get superOCount => _superOCount;
+  int get maxSuperSymbols => _maxSuperSymbols;
+  bool get placedSuperSymbol => _placedSuperSymbol;
+
+  void setSuperSymbolPlaced(bool isPlaced) {
+    _placedSuperSymbol = isPlaced;
+    notifyListeners();
+  }
+
+  void setSuperXCount(int count) {
+    _superXCount = count;
+    debugPrint('Super X count set to $count');
+    notifyListeners();
+  }
+
+  void setMaxSuperSymbols(int max) {
+    _maxSuperSymbols = max;
+    notifyListeners();
+  }
+
+  void initSuperGame() {
+    _maxSuperSymbols =
+        GameRepo().getSuperBubbleMax(_levelDifficulty, _gridSizeInt);
+    _superXCount = _maxSuperSymbols;
+    //_superOCount = _maxSuperSymbols;
+    debugPrint(
+        'Super game initialized, max super symbols: $_maxSuperSymbols, superXCount: $_superXCount chance: ${getChance()}');
+    notifyListeners();
+  }
+
+  int getChance() {
+    return getEmptyCells().length;
+  }
+
+  List<int> getRandomEmptyCell() {
+    List<List<int>> emptyCells = getEmptyCells();
+    return emptyCells[Random().nextInt(emptyCells.length)];
+  }
+
+// get row and col of all empty cells
+  List<List<int>> getEmptyCells() {
+    List<List<int>> emptyCells = [];
+    for (int row = 0; row < _gridSizeInt; row++) {
+      for (int col = 0; col < _gridSizeInt; col++) {
+        if (_board[row][col] == '') {
+          emptyCells.add([row, col]);
+        }
+      }
+    }
+    return emptyCells;
+  }
+
+  bool shouldMakeSuperMove() {
+    int randomInt = Random().nextInt(getChance());
+    debugPrint(
+        'Super symbol chance: ${getChance()}: randomInt: $randomInt, condition: ${(_superXCount < _maxSuperSymbols && _superXCount > 0 && randomInt <= 100)}');
+
+    return _superXCount <= _maxSuperSymbols &&
+        _superXCount > 0 &&
+        randomInt <= 5;
+  }
+
+  void changeToSuperSymbol(String whatPlayer) {
+    if (whatPlayer == 'O') {
+      _currentPlayer = 'Super O';
+    } else {
+      _currentPlayer = 'Super X';
+    }
+    _placedSuperSymbol = true;
+    debugPrint('Super symbol changed: $_currentPlayer');
+  }
+
+  Future<void> makeSuperMove(int i, int j) {
+    List<List<int>> emptyCells = getEmptyCells();
+    emptyCells.shuffle();
+    //cells to pop should be a list 3 random cells from the empty cells
+    List<List<int>> cellsToPop = emptyCells.take(_superXCount).toList();
+    changeToSuperSymbol(_currentPlayer);
+    applySuperXRandomEffect(i, j, cellsToPop, _levelDifficulty);
+    return Future.delayed(const Duration(milliseconds: 100));
+  }
+
+  Future<void> applySuperXRandomEffect(
+      int i, int j, List<List<int>> cellsToPop, String difficulty) async {
+    simpleMove(i, j);
+    for (var pos in cellsToPop) {
+      await Future.delayed(const Duration(milliseconds: 200), () {
+        superMove(
+          pos[0],
+          pos[1],
+        );
+        debugPrint('Super X effect applied to cell: $pos');
+        setSuperXCount(_superXCount - 1);
+      });
+    }
+    _currentPlayer = _currentPlayer == 'Super X' ? 'O' : 'X';
+    debugPrint('-----> SUPER move made, current player: $_currentPlayer');
+    notifyListeners();
   }
 }
