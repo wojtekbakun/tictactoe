@@ -50,7 +50,7 @@ class SuperBubble extends ChangeNotifier {
 
   void initSuperGame() {
     _maxSuperSymbols =
-        GameRepo().getSuperBubbleMax(_levelDifficulty, _gridSizeInt);
+        GameRepo().getSuperXBubbleMax(_levelDifficulty, _gridSizeInt);
     _superXCount = _maxSuperSymbols;
     _superOCount = _maxSuperSymbols;
     debugPrint(

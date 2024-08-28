@@ -25,9 +25,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TicTacToeGameModel>().initSuperGame();
       context.read<TicTacToeGameModel>().aiFirstMove();
-      context.read<TicTacToeGameModel>().setMaxSuperSymbols(
-            GameRepo().getSuperBubbleMax(lateDifficulty, lateGridNumber),
-          );
     });
   }
 

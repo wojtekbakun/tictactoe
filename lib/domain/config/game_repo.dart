@@ -9,7 +9,7 @@ class GameRepo {
     '21x21': {'grid_size': 21, 'win_length': 9}
   };
 
-  int getSuperBubbleMax(String difficulty, int gridSize) {
+  int getSuperXBubbleMax(String difficulty, int gridSize) {
     int superBubbleMax = 0;
 
     if (gridSize == 3) {
@@ -34,6 +34,36 @@ class GameRepo {
 
     if (gridSize == 21) {
       superBubbleMax = difficulty == 'hard' ? 3 : 6;
+    }
+
+    return superBubbleMax;
+  }
+
+  int getSuperOBubbleMax(String difficulty, int gridSize) {
+    int superBubbleMax = 0;
+
+    if (gridSize == 3) {
+      superBubbleMax = difficulty == 'hard' ? 1 : 0;
+    }
+
+    if (gridSize == 6 || gridSize == 9) {
+      superBubbleMax = difficulty == 'hard' ? 4 : 2;
+    }
+
+    if (gridSize == 11) {
+      superBubbleMax = difficulty == 'hard' ? 6 : 3;
+    }
+
+    if (gridSize == 15) {
+      superBubbleMax = difficulty == 'hard' ? 6 : 3;
+    }
+
+    if (gridSize == 18) {
+      superBubbleMax = difficulty == 'hard' ? 6 : 3;
+    }
+
+    if (gridSize == 21) {
+      superBubbleMax = difficulty == 'hard' ? 7 : 4;
     }
 
     return superBubbleMax;
