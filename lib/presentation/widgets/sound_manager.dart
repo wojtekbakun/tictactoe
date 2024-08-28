@@ -12,7 +12,7 @@ class SoundManager extends ChangeNotifier {
   Future<void> playBackgroundMusic(String musicPath) async {
     await _backgroundPlayer
         .setReleaseMode(ReleaseMode.loop); // Ustawienie trybu zapętlenia
-    await _backgroundPlayer.setVolume(0.2); // Ustawienie głośności
+    await _backgroundPlayer.setVolume(1); // Ustawienie głośności
     await _backgroundPlayer.play(AssetSource(musicPath));
     return Future.value();
   }

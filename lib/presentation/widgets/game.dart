@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
-import 'package:tictactoe/data/providers/gameplay.dart';
-import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/get_symbol_image.dart';
 import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
@@ -15,12 +13,31 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   final soundManager = SoundManager();
-  late int lateGridNumber;
-  late String lateDifficulty;
-
+  late AnimationController _controller;
+  late Animation<Offset> _animation;
   @override
   void initState() {
     super.initState();
+
+    // Tworzymy AnimationController
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    // Tworzymy animację offsetu przy użyciu Tween i CurvedAnimation
+    _animation = Tween<Offset>(
+      begin: const Offset(0, -0.05), // Początkowa pozycja
+      end: const Offset(0, 0.05), // Końcowa pozycja
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut, // Krzywa animacji
+    ));
+
+    _controller.repeat(reverse: true); // Uruchamiamy animację
+
+    // Uruchamiamy animację
+    //_controller.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TicTacToeGameModel>().initSuperGame();
@@ -31,6 +48,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     soundManager.disposePlayers();
+    _controller.dispose();
     debugPrint('Game disposed');
     super.dispose();
   }
@@ -194,12 +212,9 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final gameModel = context.watch<TicTacToeGameModel>();
-    final gameplay = context.watch<Gameplay>();
     final gridSize = gameModel.gridSizeInt;
     final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
     final soundManager = SoundManager();
-    lateDifficulty = gameModel.levelDifficulty;
-    lateGridNumber = gameModel.gridSizeInt;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -257,23 +272,35 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                                                 rows < gridSize - 1
                                             ? getBorder('full')
                                             : getBorder('none'),
-                        child: Transform.translate(
-                          // floating animation when the cell is empty
-                          offset: Offset(
-                            0,
-                            gameModel.board[rows][cols] == ''
-                                ? gameplay.floatStates[rows][cols]['offset']
-                                : 0,
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(48 / gridSize),
-                              child: SymbolImage(
-                                currentPlayer: gameModel.board[rows][cols],
+                        child: gameModel.board[rows][cols] == ''
+                            ? AnimatedBuilder(
+                                // floating animation when the cell is empty
+                                animation: _animation,
+                                builder: (context, child) {
+                                  return FractionalTranslation(
+                                    translation: _animation
+                                        .value, // Zastosowanie animowanego offsetu
+                                    child: child,
+                                  );
+                                },
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(48 / gridSize),
+                                    child: SymbolImage(
+                                      currentPlayer: gameModel.board[rows]
+                                          [cols],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(48 / gridSize),
+                                  child: SymbolImage(
+                                    currentPlayer: gameModel.board[rows][cols],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
                 ],

@@ -151,10 +151,6 @@ class TicTacToeGameModel extends ChangeNotifier {
                 };
       setPlayerTurn(!_isPlayerTurn);
       _isPlayerVsAI ? null : setCanClick(true);
-      // simpleMove(i, j);
-      // shouldMakeSuperMove()
-      //     ? {makeSuperMove(i, j), debugPrint('making super move')}
-      //     : debugPrint('not making super move');
       _clickedInNewCell = true;
       notifyListeners();
       return Future.value(false);
