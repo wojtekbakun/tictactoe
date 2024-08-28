@@ -17,7 +17,11 @@ class ResultsPanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('${gameModel.currentPlayer} wins!'),
+          Text(
+            gameModel.winner != 'DRAW'
+                ? '${gameModel.winner} wins!'
+                : '${gameModel.winner}!',
+          ),
           const Text('Click "yes" to play again or "no" to quit'),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

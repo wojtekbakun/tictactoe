@@ -20,7 +20,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     Provider.of<Gameplay>(context, listen: false).initializeFloatSettings();
-    Provider.of<Gameplay>(context, listen: false).initializeFloatStates();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 16),
@@ -29,6 +28,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
     _animationController
         .repeat(); // Powoduje powtarzanie animacji w nieskończoność
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //context.read<TicTacToeGameModel>().initSuperGame();
+      context.read<TicTacToeGameModel>().aiFirstMove();
+      //context.read<TicTacToeGameModel>().setMaxSuperSymbols(3);
+    });
   }
 
   @override

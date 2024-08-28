@@ -13,6 +13,7 @@ class Gameplay extends ChangeNotifier {
 
   void setGridSize(int size) {
     _gridSize = size;
+    initializeFloatStates();
     notifyListeners();
   }
 
@@ -43,6 +44,7 @@ class Gameplay extends ChangeNotifier {
         (_) => {'floating': true, 'offset': 0.0, 'direction': 1},
       ),
     );
+    notifyListeners();
   }
 
   void initializeFloatSettings() {
@@ -56,11 +58,11 @@ class Gameplay extends ChangeNotifier {
   void updateBubblePositions() {
     for (int row = 0; row < _gridSize; row++) {
       for (int col = 0; col < _gridSize; col++) {
-        var cell = floatStates[row][col];
-        cell['offset'] += cell['direction'] * floatSpeed;
+        var cell = _floatStates[row][col];
+        cell['offset'] += cell['direction'] * _floatSpeed;
 
         // Odwracanie kierunku, gdy bąbelek osiągnie maksymalny zakres
-        if (cell['offset'].abs() >= floatRange) {
+        if (cell['offset'].abs() >= _floatRange) {
           cell['direction'] *= -1;
         }
       }

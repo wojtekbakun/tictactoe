@@ -42,7 +42,6 @@ class TicTacToeGameModel extends ChangeNotifier {
   int get scoreO => _scoreY;
 
   bool _isMusicPlaying = true;
-
   bool get isMusicPlaying => _isMusicPlaying;
 
   void setMusicPlaying(bool isPlaying) {
@@ -100,13 +99,16 @@ class TicTacToeGameModel extends ChangeNotifier {
       } else if (isBoardFull()) {
         _winner = 'DRAW';
         debugPrint('Winner: $_winner');
+        finishGame();
         return true;
       }
       _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
       _clickedInNewCell = true;
       notifyListeners();
+
       return true;
     }
+
     _clickedInNewCell = false;
     return false;
   }
@@ -209,6 +211,24 @@ class TicTacToeGameModel extends ChangeNotifier {
     }
 
     return false;
+  }
+
+  void aiFirstMove() {
+    int center = _gridSizeInt ~/ 2;
+    if (_board[center][center] == '' && _levelDifficulty == 'hard') {
+      _currentPlayer = 'O';
+      makeMove(center, center);
+    } else {
+      bool randomBool = Random().nextBool();
+      if (randomBool) {
+        _currentPlayer = 'Super O';
+        makeMove(center, center);
+      } else {
+        _currentPlayer = 'O';
+        makeMove(center, center);
+      }
+    }
+    debugPrint('AI first move: $_currentPlayer');
   }
 
   void aiEasyMove() {

@@ -8,4 +8,55 @@ class GameRepo {
     '18x18': {'grid_size': 18, 'win_length': 8},
     '21x21': {'grid_size': 21, 'win_length': 9}
   };
+
+  int getSuperBubbleMax(String difficulty, int gridSize) {
+    int superBubbleMax = 0;
+
+    if (gridSize == 3) {
+      superBubbleMax = difficulty == 'hard' ? 0 : 1;
+    }
+
+    if (gridSize == 6 || gridSize == 9) {
+      superBubbleMax = difficulty == 'hard' ? 1 : 2;
+    }
+
+    if (gridSize == 11) {
+      superBubbleMax = difficulty == 'hard' ? 1 : 4;
+    }
+
+    if (gridSize == 15) {
+      superBubbleMax = difficulty == 'hard' ? 2 : 6;
+    }
+
+    if (gridSize == 18) {
+      superBubbleMax = difficulty == 'hard' ? 2 : 6;
+    }
+
+    if (gridSize == 21) {
+      superBubbleMax = difficulty == 'hard' ? 3 : 6;
+    }
+
+    return superBubbleMax;
+  }
+
+  int getCellsToPop(int gridSize) {
+    switch (gridSize) {
+      case 3:
+        return 1;
+      case 6:
+        return 2;
+      case 9:
+        return 2;
+      case 11:
+        return 3;
+      case 15:
+        return 4;
+      case 18:
+        return 5;
+      case 21:
+        return 6;
+      default:
+        return 1;
+    }
+  }
 }

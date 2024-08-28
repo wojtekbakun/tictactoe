@@ -71,6 +71,7 @@ class GridScreen extends StatelessWidget {
                                     ?['grid_size'] ??
                                 3,
                           );
+
                           adModel.setImagePath(gridSize);
                           debugPrint('Grid size: $gridSize');
                         },
