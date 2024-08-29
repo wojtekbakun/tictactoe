@@ -71,6 +71,7 @@ class _GameScreenState extends State<GameScreen> {
                           PointsToWin(pointsToWin: winLength.toString()),
                           ElevatedButton(
                             onPressed: () {
+                              gameModel.resetScore();
                               soundManager.playEffectSound(
                                   'sounds/click_sound_effect.mp3');
                               Navigator.pushReplacementNamed(

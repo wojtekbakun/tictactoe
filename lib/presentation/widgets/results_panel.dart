@@ -41,6 +41,7 @@ class ResultsPanel extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   gameModel.resetGame();
+                  gameModel.resetScore();
                   Navigator.pushReplacementNamed(context, '/bubbles');
                 },
                 child: const Text('No'),
