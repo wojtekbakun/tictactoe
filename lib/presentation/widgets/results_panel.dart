@@ -29,11 +29,20 @@ class ResultsPanel extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   gameModel.resetGame();
+                  gameModel.isPlayerVsAI
+                      ? {
+                          gameModel.aiFirstMove(),
+                          gameModel.initSuperGame(),
+                        }
+                      : null;
                 },
                 child: const Text('Yes'),
               ),
               TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/mode'),
+                onPressed: () {
+                  gameModel.resetGame();
+                  Navigator.pushReplacementNamed(context, '/bubbles');
+                },
                 child: const Text('No'),
               ),
             ],

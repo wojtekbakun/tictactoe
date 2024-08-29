@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
@@ -21,53 +20,62 @@ class _ModeScreenState extends State<ModeScreen> {
     super.initState();
     gameModel = context.read<TicTacToeGameModel>();
     soundManager = context.read<SoundManager>();
-
-    // Sprawdzenie stanu odtwarzacza i odpowiednia reakcja
-    if (soundManager.getBackgroundPlayerState() != PlayerState.playing) {
-      soundManager.playBackgroundMusic('sounds/background_music.wav');
-    }
   }
 
   @override
   void dispose() {
-    // Zatrzymanie muzyki przy wyjściu z ekranu
-    soundManager.stopBackgroundMusic();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Button(
-              text: 'Player vs AI',
-              onPressed: () async {
-                await soundManager
-                    .playEffectSound('sounds/click_sound_effect.mp3');
-                gameModel.setPlayerVsAI(true);
-                gameModel.resetScore();
-                gameModel.resetGame();
-                if (!context.mounted) return;
-                Navigator.pushNamed(context, '/grid');
-              },
-            ),
-            Button(
-              text: 'Player vs Player',
-              onPressed: () async {
-                await soundManager
-                    .playEffectSound('sounds/click_sound_effect.mp3');
-                gameModel.setPlayerVsAI(false);
-                gameModel.resetScore();
-                gameModel.resetGame();
-                if (!context.mounted) return;
-                Navigator.pushNamed(context, '/grid');
-              },
-            ),
-          ],
+      body: SafeArea(
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Button(
+                      text: 'BACK',
+                      onPressed: () {
+                        soundManager
+                            .playEffectSound('sounds/click_sound_effect.mp3');
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Button(
+                          text: 'Player vs AI',
+                          onPressed: () async {
+                            await soundManager.playEffectSound(
+                                'sounds/click_sound_effect.mp3');
+                            gameModel.setPlayerVsAI(true);
+                            if (!context.mounted) return;
+                            Navigator.pushNamed(context, '/grid');
+                          },
+                        ),
+                        Button(
+                          text: 'Player vs Player',
+                          onPressed: () async {
+                            await soundManager.playEffectSound(
+                                'sounds/click_sound_effect.mp3');
+                            gameModel.setPlayerVsAI(false);
+                            if (!context.mounted) return;
+                            Navigator.pushNamed(context, '/grid');
+                          },
+                        ),
+                      ]),
+                ),
+              ]),
         ),
       ),
     );

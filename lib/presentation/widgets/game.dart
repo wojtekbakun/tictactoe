@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
@@ -12,12 +13,19 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  final soundManager = SoundManager();
+  late final SoundManager soundManager;
   late AnimationController _controller;
   late Animation<Offset> _animation;
   @override
   void initState() {
     super.initState();
+
+    soundManager = SoundManager();
+
+    // Sprawdzenie stanu odtwarzacza i odpowiednia reakcja
+    if (soundManager.getBackgroundPlayerState() != PlayerState.playing) {
+      soundManager.playBackgroundMusic('sounds/background_music.wav');
+    }
 
     // Tworzymy AnimationController
     _controller = AnimationController(
@@ -47,6 +55,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    // soundManager.stopBackgroundMusic();
+    // soundManager.stopEffectSound();
     soundManager.disposePlayers();
     _controller.dispose();
     debugPrint('Game disposed');
@@ -214,7 +224,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     final gameModel = context.watch<TicTacToeGameModel>();
     final gridSize = gameModel.gridSizeInt;
     final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
-    final soundManager = SoundManager();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -235,13 +244,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                       onTap: () async {
                         if (!gameModel.isGameFinished) {
                           if (gameModel.canClick) {
-                            await gameModel.makeMove(rows, cols,
-                                soundManager: soundManager);
+                            await gameModel.makeMove(rows, cols);
 
                             if (gameModel.isPlayerVsAI &&
                                 gameModel.clickedInNewCell) {
                               if (!gameModel.isGameFinished) {
-                                await gameModel.aiMove(soundManager);
+                                await gameModel.aiMove();
                               }
                             }
                           }

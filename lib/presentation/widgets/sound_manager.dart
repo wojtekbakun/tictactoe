@@ -10,21 +10,14 @@ class SoundManager extends ChangeNotifier {
   AudioPlayer get effectPlayer => _effectPlayer;
 
   Future<void> playBackgroundMusic(String musicPath) async {
-    await _backgroundPlayer
+    _backgroundPlayer
         .setReleaseMode(ReleaseMode.loop); // Ustawienie trybu zapętlenia
-    await _backgroundPlayer.setVolume(1); // Ustawienie głośności
-    await _backgroundPlayer.play(AssetSource(musicPath));
-    return Future.value();
+    _backgroundPlayer.setVolume(1); // Ustawienie głośności
+    _backgroundPlayer.play(AssetSource(musicPath));
   }
 
   Future<void> playEffectSound(String effectPath) async {
     await _effectPlayer.play(AssetSource(effectPath));
-    return Future.value();
-  }
-
-  Future<void> playEffect2Sound(String effectPath) async {
-    await _effectPlayer2.play(AssetSource(effectPath));
-    return Future.value();
   }
 
   Future<void> stopBackgroundMusic() async {
@@ -38,9 +31,8 @@ class SoundManager extends ChangeNotifier {
 
   Future<void> disposePlayers() async {
     await _backgroundPlayer.dispose();
-    await _effectPlayer.dispose();
-    await _effectPlayer2.dispose();
-    return Future.value();
+    // await _effectPlayer.dispose();
+    // await _effectPlayer2.dispose();
   }
 
   PlayerState getBackgroundPlayerState() {

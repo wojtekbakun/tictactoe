@@ -10,13 +10,25 @@ List<String> levels = [
   'hard',
 ];
 
-class LevelScreen extends StatelessWidget {
+class LevelScreen extends StatefulWidget {
   const LevelScreen({super.key});
+
+  @override
+  State<LevelScreen> createState() => _LevelScreenState();
+}
+
+class _LevelScreenState extends State<LevelScreen> {
+  late final SoundManager soundManager;
+
+  @override
+  void initState() {
+    super.initState();
+    soundManager = context.read<SoundManager>();
+  }
 
   @override
   Widget build(BuildContext context) {
     final gameModel = context.watch<TicTacToeGameModel>();
-    final soundManager = SoundManager();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -45,8 +57,10 @@ class LevelScreen extends StatelessWidget {
                         onPressed: () {
                           soundManager
                               .playEffectSound('sounds/click_sound_effect.mp3');
-                          level == 'hard'
-                              ? Navigator.pushNamed(context, '/splash')
+                          gameModel.superBubblesMode
+                              ? level == 'hard'
+                                  ? Navigator.pushNamed(context, '/splash')
+                                  : Navigator.pushNamed(context, '/game')
                               : Navigator.pushNamed(context, '/game');
                           gameModel.setLevelDifficulty(level);
                         },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/core/providers/providers_init.dart';
+import 'package:tictactoe/presentation/screens/bubble_screen.dart';
 import 'package:tictactoe/presentation/screens/game_screen.dart';
 import 'package:tictactoe/presentation/screens/grid_screen.dart';
 import 'package:tictactoe/presentation/screens/level_screen.dart';
@@ -27,8 +28,9 @@ class MainApp extends StatelessWidget {
         '/level': (context) => const LevelScreen(),
         '/game': (context) => const GameScreen(),
         '/splash': (context) => const SplashScreen(),
+        '/bubbles': (context) => const BubbleScreen(),
       },
-      initialRoute: '/mode',
+      initialRoute: '/bubbles',
       home: const Scaffold(
         body: ModeScreen(),
       ),

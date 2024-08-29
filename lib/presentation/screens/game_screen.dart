@@ -18,6 +18,20 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  late final SoundManager soundManager;
+
+  @override
+  void initState() {
+    super.initState();
+    soundManager = SoundManager();
+  }
+
+  @override
+  void dispose() {
+    soundManager.disposePlayers();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final gameModel = context.watch<TicTacToeGameModel>();
@@ -26,8 +40,6 @@ class _GameScreenState extends State<GameScreen> {
     final gridSize = gameModel.gridSizeInt;
     int winLength =
         GameRepo().gameConfigurations[gameModel.gridSize]?['win_length'] ?? 3;
-
-    final soundManager = SoundManager();
 
     return Scaffold(
       body: Stack(
@@ -61,7 +73,8 @@ class _GameScreenState extends State<GameScreen> {
                             onPressed: () {
                               soundManager.playEffectSound(
                                   'sounds/click_sound_effect.mp3');
-                              Navigator.pushReplacementNamed(context, '/mode');
+                              Navigator.pushReplacementNamed(
+                                  context, '/bubbles');
                               gameModel.resetGame();
                             },
                             child: const Text('BACK'),
