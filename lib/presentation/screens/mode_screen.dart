@@ -44,7 +44,7 @@ class _ModeScreenState extends State<ModeScreen> {
                       onPressed: () {
                         soundManager
                             .playEffectSound('sounds/click_sound_effect.mp3');
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/bubbles');
                       },
                     ),
                   ],

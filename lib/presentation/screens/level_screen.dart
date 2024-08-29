@@ -41,7 +41,7 @@ class _LevelScreenState extends State<LevelScreen> {
                     onPressed: () {
                       soundManager
                           .playEffectSound('sounds/click_sound_effect.mp3');
-                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/grid');
                     },
                   ),
                 ],
@@ -57,11 +57,7 @@ class _LevelScreenState extends State<LevelScreen> {
                         onPressed: () {
                           soundManager
                               .playEffectSound('sounds/click_sound_effect.mp3');
-                          gameModel.superBubblesMode
-                              ? level == 'hard'
-                                  ? Navigator.pushNamed(context, '/splash')
-                                  : Navigator.pushNamed(context, '/game')
-                              : Navigator.pushNamed(context, '/game');
+                          Navigator.pushNamed(context, '/game');
                           gameModel.setLevelDifficulty(level);
                         },
                       ),

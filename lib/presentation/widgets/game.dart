@@ -6,30 +6,23 @@ import 'package:tictactoe/presentation/widgets/get_symbol_image.dart';
 import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 class Game extends StatefulWidget {
-  const Game({super.key});
+  final SoundManager soundManager;
+  const Game({super.key, required this.soundManager});
 
   @override
   State<Game> createState() => _GameState();
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  late final SoundManager soundManager;
   late AnimationController _controller;
   late Animation<Offset> _animation;
   @override
   void initState() {
     super.initState();
 
-    soundManager = SoundManager();
-
-    // Sprawdzenie stanu odtwarzacza i odpowiednia reakcja
-    if (soundManager.getBackgroundPlayerState() != PlayerState.playing) {
-      soundManager.playBackgroundMusic('sounds/background_music.wav');
-    }
-
     // Tworzymy AnimationController
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
@@ -57,7 +50,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   void dispose() {
     // soundManager.stopBackgroundMusic();
     // soundManager.stopEffectSound();
-    soundManager.disposePlayers();
+    //soundManager.disposePlayers();
     _controller.dispose();
     debugPrint('Game disposed');
     super.dispose();
@@ -224,7 +217,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     final gameModel = context.watch<TicTacToeGameModel>();
     final gridSize = gameModel.gridSizeInt;
     final screenWidth = MediaQuery.of(context).size.width - 48; // 48 is padding
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -251,6 +243,10 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                               if (!gameModel.isGameFinished) {
                                 await gameModel.aiMove();
                               }
+                            }
+                            if (gameModel.isGameFinished) {
+                              await widget.soundManager.stopBackgroundMusic();
+                              debugPrint('Stopped background music');
                             }
                           }
                         }

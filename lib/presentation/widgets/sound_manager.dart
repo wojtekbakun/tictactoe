@@ -36,6 +36,7 @@ class SoundManager extends ChangeNotifier {
   }
 
   PlayerState getBackgroundPlayerState() {
+    debugPrint('Background player state: ${_backgroundPlayer.state}');
     return _backgroundPlayer.state;
   }
 }

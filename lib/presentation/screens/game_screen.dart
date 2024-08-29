@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
@@ -17,18 +18,30 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreen>
+    with SingleTickerProviderStateMixin {
   late final SoundManager soundManager;
+  late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    soundManager = SoundManager();
+    soundManager = context.read<SoundManager>();
+    // Sprawdzenie stanu odtwarzacza i odpowiednia reakcja
+    if (soundManager.getBackgroundPlayerState() != PlayerState.playing) {
+      soundManager.playBackgroundMusic('sounds/background_music.wav');
+    }
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _controller.repeat();
   }
 
   @override
   void dispose() {
-    soundManager.disposePlayers();
+    //soundManager.disposePlayers();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -41,6 +54,7 @@ class _GameScreenState extends State<GameScreen> {
     int winLength =
         GameRepo().gameConfigurations[gameModel.gridSize]?['win_length'] ?? 3;
 
+    gameModel.isGameFinished ? _controller.reset() : null;
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -69,14 +83,28 @@ class _GameScreenState extends State<GameScreen> {
                             oScore: gameModel.scoreO,
                           ),
                           PointsToWin(pointsToWin: winLength.toString()),
+                          SizedBox(
+                            height: screenWidth / 12,
+                            width: screenWidth / 12,
+                            child: Image.asset(
+                              gameModel.isGameFinished
+                                  ? gameModel.winner == 'X'
+                                      ? 'assets/images/bubble_x.jpeg'
+                                      : 'assets/images/bubble_o.jpg'
+                                  : gameModel.currentPlayer == 'X'
+                                      ? 'assets/images/bubble_x.jpeg'
+                                      : 'assets/images/bubble_o.jpg',
+                            ),
+                          ),
                           ElevatedButton(
                             onPressed: () {
+                              soundManager.stopBackgroundMusic();
                               gameModel.resetScore();
                               soundManager.playEffectSound(
                                   'sounds/click_sound_effect.mp3');
-                              Navigator.pushReplacementNamed(
-                                  context, '/bubbles');
+                              Navigator.pushReplacementNamed(context, '/mode');
                               gameModel.resetGame();
+                              _controller.reset();
                             },
                             child: const Text('BACK'),
                           ),
@@ -86,6 +114,7 @@ class _GameScreenState extends State<GameScreen> {
                           ? ResultsPanel(
                               screenWidth: screenWidth,
                               gameModel: gameModel,
+                              soundManager: soundManager,
                             )
                           : const SizedBox(),
                       Column(
@@ -94,19 +123,23 @@ class _GameScreenState extends State<GameScreen> {
                           Stack(
                             alignment: Alignment.center,
                             children: [
-                              const Game(),
+                              Game(soundManager: soundManager),
                               gameModel.isGameFinished
-                                  ? CustomPaint(
-                                      size: const Size(
-                                        1,
-                                        1,
-                                      ),
-                                      painter: WinningLinePainter(
-                                        winningSequence: gameModel.winSequence,
-                                        cellSize: (screenWidth - 48) / gridSize,
-                                        screenWidth: screenWidth,
-                                      ),
-                                    )
+                                  ? gameModel.winner != 'DRAW'
+                                      ? CustomPaint(
+                                          size: const Size(
+                                            1,
+                                            1,
+                                          ),
+                                          painter: WinningLinePainter(
+                                              winningSequence:
+                                                  gameModel.winSequence,
+                                              cellSize:
+                                                  (screenWidth - 48) / gridSize,
+                                              screenWidth: screenWidth,
+                                              animationController: _controller),
+                                        )
+                                      : const SizedBox()
                                   : const SizedBox(),
                             ],
                           ),

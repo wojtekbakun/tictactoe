@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
+import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 class ResultsPanel extends StatelessWidget {
   final double screenWidth;
   final TicTacToeGameModel gameModel;
+  final SoundManager soundManager;
   const ResultsPanel(
-      {super.key, required this.screenWidth, required this.gameModel});
+      {super.key,
+      required this.screenWidth,
+      required this.gameModel,
+      required this.soundManager});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,7 @@ class ResultsPanel extends StatelessWidget {
         children: [
           Text(
             gameModel.winner != 'DRAW'
-                ? '${gameModel.winner} wins!'
+                ? '${gameModel.winner == 'Super X' ? 'X' : gameModel.winner == 'Super O' ? 'O' : gameModel.winner} wins!'
                 : '${gameModel.winner}!',
           ),
           const Text('Click "yes" to play again or "no" to quit'),
@@ -28,6 +33,8 @@ class ResultsPanel extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
+                  soundManager
+                      .playBackgroundMusic('sounds/background_music.wav');
                   gameModel.resetGame();
                   gameModel.isPlayerVsAI
                       ? {
@@ -42,7 +49,7 @@ class ResultsPanel extends StatelessWidget {
                 onPressed: () {
                   gameModel.resetGame();
                   gameModel.resetScore();
-                  Navigator.pushReplacementNamed(context, '/bubbles');
+                  Navigator.pushReplacementNamed(context, '/mode');
                 },
                 child: const Text('No'),
               ),

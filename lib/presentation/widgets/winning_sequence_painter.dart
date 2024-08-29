@@ -4,11 +4,13 @@ class WinningLinePainter extends CustomPainter {
   final List<List<int>> winningSequence;
   final double cellSize;
   final double screenWidth;
+  final AnimationController animationController;
 
   WinningLinePainter(
       {required this.winningSequence,
       required this.cellSize,
-      required this.screenWidth});
+      required this.screenWidth,
+      required this.animationController});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -32,7 +34,16 @@ class WinningLinePainter extends CustomPainter {
     );
 
     // Narysuj linię
-    canvas.drawLine(start, end, paint);
+    final animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeInOut,
+    ));
+    canvas.drawLine(
+      start,
+      Offset.lerp(start, end, animation.value)!,
+      paint,
+    );
+    animationController.forward();
   }
 
   @override

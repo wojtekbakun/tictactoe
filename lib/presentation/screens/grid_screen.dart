@@ -13,8 +13,8 @@ List<String> gridSizes = [
   '9x9',
   '11x11',
   '15x15',
-  '18x18',
-  '21x21',
+  //'18x18',
+  //'21x21',
 ];
 
 class GridScreen extends StatelessWidget {
@@ -41,7 +41,7 @@ class GridScreen extends StatelessWidget {
                     onPressed: () {
                       soundManager
                           .playEffectSound('sounds/click_sound_effect.mp3');
-                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/mode');
                     },
                   ),
                 ],

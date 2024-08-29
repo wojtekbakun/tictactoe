@@ -5,7 +5,6 @@ import 'package:tictactoe/presentation/screens/game_screen.dart';
 import 'package:tictactoe/presentation/screens/grid_screen.dart';
 import 'package:tictactoe/presentation/screens/level_screen.dart';
 import 'package:tictactoe/presentation/screens/mode_screen.dart';
-import 'package:tictactoe/presentation/screens/splash_screen.dart';
 
 void main() {
   runApp(
@@ -27,7 +26,7 @@ class MainApp extends StatelessWidget {
         '/grid': (context) => const GridScreen(),
         '/level': (context) => const LevelScreen(),
         '/game': (context) => const GameScreen(),
-        '/splash': (context) => const SplashScreen(),
+        // '/splash': (context) => const SplashScreen(),
         '/bubbles': (context) => const BubbleScreen(),
       },
       initialRoute: '/bubbles',
