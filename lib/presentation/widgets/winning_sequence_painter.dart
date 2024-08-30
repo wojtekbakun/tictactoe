@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe/data/models/ttt_game_model.dart';
+import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 class WinningLinePainter extends CustomPainter {
   final List<List<int>> winningSequence;
   final double cellSize;
   final double screenWidth;
   final AnimationController animationController;
+  final SoundManager soundManager;
+  final TicTacToeGameModel gameModel;
 
-  WinningLinePainter(
-      {required this.winningSequence,
-      required this.cellSize,
-      required this.screenWidth,
-      required this.animationController});
+  WinningLinePainter({
+    required this.winningSequence,
+    required this.cellSize,
+    required this.screenWidth,
+    required this.animationController,
+    required this.soundManager,
+    required this.gameModel,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -38,12 +45,18 @@ class WinningLinePainter extends CustomPainter {
       parent: animationController,
       curve: Curves.easeInOut,
     ));
-    canvas.drawLine(
-      start,
-      Offset.lerp(start, end, animation.value)!,
-      paint,
-    );
-    animationController.forward();
+
+    if (gameModel.isGameFinished) {
+      soundManager.stopBackgroundMusic();
+      if (gameModel.winner != 'DRAW') {
+        canvas.drawLine(
+          start,
+          Offset.lerp(start, end, animation.value)!,
+          paint,
+        );
+        animationController.forward();
+      } else {}
+    }
   }
 
   @override

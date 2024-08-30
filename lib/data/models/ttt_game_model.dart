@@ -4,6 +4,9 @@ import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 class TicTacToeGameModel extends ChangeNotifier {
+  final SoundManager soundManagerProvider;
+
+  TicTacToeGameModel(this.soundManagerProvider);
   // SETTINGS
   List<List<String>> _board = [
     ['', '', ''],
@@ -49,6 +52,9 @@ class TicTacToeGameModel extends ChangeNotifier {
   HELPERS
 
   */
+
+  int _whichEffectPlayer = 0;
+  int get whichEffectPlayer => _whichEffectPlayer;
 
   void setMusicPlaying(bool isPlaying) {
     _isMusicPlaying = isPlaying;
@@ -119,7 +125,6 @@ class TicTacToeGameModel extends ChangeNotifier {
   Future<bool> makeMove(int i, int j) async {
     if (_board[i][j] == '') {
       setCanClick(false);
-      debugPrint('Move made at $i, $j: $_currentPlayer');
 
       _isPlayerVsAI
           ? _currentPlayer == 'X' || _currentPlayer == 'Super X'
@@ -161,15 +166,32 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<void> simpleMove(int i, int j) async {
-    final SoundManager soundManager = SoundManager();
-    soundManager.playEffectSound('sounds/bubble_pop.wav');
+    _whichEffectPlayer++;
+    debugPrint('simple Effect player: $_whichEffectPlayer');
+
+    switch (_whichEffectPlayer) {
+      case 0:
+        soundManagerProvider.playEffectSound('sounds/bubble_pop.wav');
+        break;
+      case 1:
+        soundManagerProvider.playEffectSound2('sounds/bubble_pop.wav');
+        break;
+      case 2:
+        soundManagerProvider.playEffectSound3('sounds/bubble_pop.wav');
+        break;
+      default:
+        soundManagerProvider.playEffectSound('sounds/bubble_pop.wav');
+    }
+
+    _whichEffectPlayer >= 3 ? _whichEffectPlayer = 0 : null;
+
     _board[i][j] = _currentPlayer;
     debugPrint('making simple move for $_currentPlayer: $i, $j');
     if (checkWinner(_currentPlayer)) {
       _winner = _currentPlayer;
       finishGame();
       await Future.delayed((const Duration(milliseconds: 100)), () {
-        soundManager.playEffectSound('sounds/new_swoosh.mp3');
+        soundManagerProvider.playEffectSound('sounds/new_swoosh.mp3');
       });
       debugPrint('Winner: $_winner');
       //notifyListeners();
@@ -187,13 +209,29 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<bool> superMove(int i, int j) async {
-    final SoundManager soundManager = SoundManager();
+    _whichEffectPlayer++;
+    debugPrint('super Effect player: $_whichEffectPlayer');
+
+    switch (_whichEffectPlayer) {
+      case 0:
+        soundManagerProvider.playEffectSound3('sounds/bubble_pop.wav');
+        break;
+      case 1:
+        soundManagerProvider.playEffectSound4('sounds/bubble_pop.wav');
+        break;
+      case 2:
+        soundManagerProvider.playEffectSound2('sounds/bubble_pop.wav');
+        break;
+      default:
+        soundManagerProvider.playEffectSound3('sounds/bubble_pop.wav');
+    }
+    _whichEffectPlayer >= 3 ? _whichEffectPlayer = 0 : null;
     _board[i][j] = _currentPlayer;
     if (checkWinner(_currentPlayer)) {
       _winner = _currentPlayer;
       finishGame();
       await Future.delayed((const Duration(milliseconds: 100)), () {
-        soundManager.playEffectSound('sounds/new_swoosh.mp3');
+        soundManagerProvider.playEffectSound('sounds/new_swoosh.mp3');
       });
       debugPrint('Winner: $_winner');
       //notifyListeners();
@@ -530,7 +568,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     return criticalThreats.isNotEmpty ? criticalThreats : potentialThreats;
   }
 
-  Future aiMove(SoundManager soundManager) async {
+  Future aiMove() async {
     if (!_isGameFinished) {
       List<List<int>> emptyCells = [];
 
@@ -560,7 +598,7 @@ class TicTacToeGameModel extends ChangeNotifier {
       setPlayerTurn(true);
       return null;
     } else {
-      soundManager.stopBackgroundMusic();
+      soundManagerProvider.stopBackgroundMusic();
       return null;
     }
   }
@@ -735,9 +773,8 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<void> applySuperXORandomEffect(int i, int j, String difficulty) async {
-    final SoundManager soundManager = SoundManager();
     _currentPlayer = 'Super X';
-    soundManager.playEffectSound('sounds/jackpot_sound_edit.mp3');
+    soundManagerProvider.playEffectSuper('sounds/jackpot_sound_edit.mp3');
     superMove(i, j);
     if (!_isGameFinished) {
       await Future.delayed(
@@ -771,9 +808,8 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<void> applySuperOEffect(int i, int j, String difficulty) async {
-    final SoundManager soundManager = SoundManager();
     _currentPlayer = 'Super O';
-    soundManager.playEffectSound('sounds/jackpot_sound_edit.mp3');
+    soundManagerProvider.playEffectSuper('sounds/jackpot_sound_edit.mp3');
     superMove(i, j);
     if (!_isGameFinished) {
       await Future.delayed(

@@ -22,7 +22,7 @@ class _BubbleScreenState extends State<BubbleScreen> {
 
   @override
   void dispose() {
-    soundManager.disposePlayers();
+    soundManager.disposeBackgroundSound();
     super.dispose();
   }
 
@@ -41,7 +41,6 @@ class _BubbleScreenState extends State<BubbleScreen> {
               child: Button(
                 text: 'Tic Tac Toe\nWith Super Bubbles',
                 onPressed: () {
-                  soundManager.playEffectSound('sounds/click_sound_effect.mp3');
                   gameModel.setSuperBubblesMode(true);
                   Navigator.pushNamed(context, '/mode');
                 },
@@ -50,7 +49,6 @@ class _BubbleScreenState extends State<BubbleScreen> {
             Button(
               text: 'Tic Tac Toe\nWithout Super Bubbles',
               onPressed: () {
-                soundManager.playEffectSound('sounds/click_sound_effect.mp3');
                 gameModel.setSuperBubblesMode(false);
                 Navigator.pushNamed(context, '/mode');
               },

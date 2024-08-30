@@ -14,18 +14,15 @@ class ProvidersInit extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AdSettings()),
-        ChangeNotifierProvider(create: (context) => TicTacToeGameModel()),
         ChangeNotifierProvider(create: (context) => Gameplay()),
         ChangeNotifierProvider(create: (context) => SoundManager()),
-        // ChangeNotifierProvider(
-        //     create: (context) =>
-        //         SuperBubble(context.read<TicTacToeGameModel>())),
-        // ChangeNotifierProxyProvider<TicTacToeGameModel, SuperBubble>(
-        //     create: (context) => SuperBubble(
-        //           context.read<TicTacToeGameModel>(),
-        //         ),
-        //     update: (context, gameModel, superBubble) =>
-        //         superBubble..initSuperGame()),
+        ChangeNotifierProxyProvider<SoundManager, TicTacToeGameModel>(
+          create: (_) => TicTacToeGameModel(
+            Provider.of<SoundManager>(_, listen: false),
+          ),
+          update: (_, soundManagerProvider, gameModel) =>
+              TicTacToeGameModel(soundManagerProvider),
+        )
       ],
       child: child,
     );

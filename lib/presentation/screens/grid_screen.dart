@@ -5,7 +5,6 @@ import 'package:tictactoe/data/providers/ad_settings.dart';
 import 'package:tictactoe/data/providers/gameplay.dart';
 import 'package:tictactoe/domain/config/game_repo.dart';
 import 'package:tictactoe/presentation/widgets/button.dart';
-import 'package:tictactoe/presentation/widgets/sound_manager.dart';
 
 List<String> gridSizes = [
   '3x3',
@@ -26,7 +25,7 @@ class GridScreen extends StatelessWidget {
     final gameModel = context.watch<TicTacToeGameModel>();
     final gameplay = context.watch<Gameplay>();
     final adModel = context.watch<AdSettings>();
-    final soundManager = SoundManager();
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -39,8 +38,6 @@ class GridScreen extends StatelessWidget {
                   Button(
                     text: 'BACK',
                     onPressed: () {
-                      soundManager
-                          .playEffectSound('sounds/click_sound_effect.mp3');
                       Navigator.pushNamed(context, '/mode');
                     },
                   ),
@@ -54,8 +51,6 @@ class GridScreen extends StatelessWidget {
                       Button(
                         text: gridSize,
                         onPressed: () {
-                          soundManager
-                              .playEffectSound('sounds/click_sound_effect.mp3');
                           gameModel.isPlayerVsAI
                               ? Navigator.pushNamed(context, '/level')
                               : Navigator.pushNamed(context, '/game');

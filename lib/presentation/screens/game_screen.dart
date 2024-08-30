@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
 import 'package:tictactoe/data/providers/ad_settings.dart';
 import 'package:tictactoe/domain/config/game_repo.dart';
+import 'package:tictactoe/presentation/widgets/button.dart';
 import 'package:tictactoe/presentation/widgets/game.dart';
 import 'package:tictactoe/presentation/widgets/points_to_win.dart';
 import 'package:tictactoe/presentation/widgets/results_panel.dart';
@@ -40,7 +41,7 @@ class _GameScreenState extends State<GameScreen>
 
   @override
   void dispose() {
-    //soundManager.disposePlayers();
+    //soundManager.disposeEffectPlayers();
     _controller.dispose();
     super.dispose();
   }
@@ -96,17 +97,15 @@ class _GameScreenState extends State<GameScreen>
                                       : 'assets/images/bubble_o.jpg',
                             ),
                           ),
-                          ElevatedButton(
+                          Button(
                             onPressed: () {
                               soundManager.stopBackgroundMusic();
                               gameModel.resetScore();
-                              soundManager.playEffectSound(
-                                  'sounds/click_sound_effect.mp3');
                               Navigator.pushReplacementNamed(context, '/mode');
                               gameModel.resetGame();
                               _controller.reset();
                             },
-                            child: const Text('BACK'),
+                            text: 'BACK',
                           ),
                         ],
                       ),
@@ -125,22 +124,20 @@ class _GameScreenState extends State<GameScreen>
                             children: [
                               Game(soundManager: soundManager),
                               gameModel.isGameFinished
-                                  ? gameModel.winner != 'DRAW'
-                                      ? CustomPaint(
-                                          size: const Size(
-                                            1,
-                                            1,
-                                          ),
-                                          painter: WinningLinePainter(
-                                            winningSequence:
-                                                gameModel.winSequence,
-                                            cellSize:
-                                                (screenWidth - 48) / gridSize,
-                                            screenWidth: screenWidth,
-                                            animationController: _controller,
-                                          ),
-                                        )
-                                      : const SizedBox()
+                                  ? CustomPaint(
+                                      size: const Size(
+                                        1,
+                                        1,
+                                      ),
+                                      painter: WinningLinePainter(
+                                        winningSequence: gameModel.winSequence,
+                                        cellSize: (screenWidth - 48) / gridSize,
+                                        screenWidth: screenWidth,
+                                        animationController: _controller,
+                                        soundManager: soundManager,
+                                        gameModel: gameModel,
+                                      ),
+                                    )
                                   : const SizedBox(),
                             ],
                           ),
