@@ -168,9 +168,11 @@ class TicTacToeGameModel extends ChangeNotifier {
     if (checkWinner(_currentPlayer)) {
       _winner = _currentPlayer;
       finishGame();
-      soundManager.playEffectSound('sounds/new_swoosh.mp3');
+      await Future.delayed((const Duration(milliseconds: 100)), () {
+        soundManager.playEffectSound('sounds/new_swoosh.mp3');
+      });
       debugPrint('Winner: $_winner');
-      notifyListeners();
+      //notifyListeners();
       return Future.value();
     } else if (isBoardFull()) {
       _winner = 'DRAW';
@@ -184,15 +186,17 @@ class TicTacToeGameModel extends ChangeNotifier {
     return Future.value();
   }
 
-  Future<bool> superMove(int i, int j) {
+  Future<bool> superMove(int i, int j) async {
     final SoundManager soundManager = SoundManager();
     _board[i][j] = _currentPlayer;
     if (checkWinner(_currentPlayer)) {
       _winner = _currentPlayer;
       finishGame();
-      soundManager.playEffectSound('sounds/new_swoosh.mp3');
+      await Future.delayed((const Duration(milliseconds: 100)), () {
+        soundManager.playEffectSound('sounds/new_swoosh.mp3');
+      });
       debugPrint('Winner: $_winner');
-      notifyListeners();
+      //notifyListeners();
       return Future.value(true);
     } else if (isBoardFull()) {
       _winner = 'DRAW';
@@ -526,7 +530,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     return criticalThreats.isNotEmpty ? criticalThreats : potentialThreats;
   }
 
-  Future aiMove() async {
+  Future aiMove(SoundManager soundManager) async {
     if (!_isGameFinished) {
       List<List<int>> emptyCells = [];
 
@@ -554,6 +558,9 @@ class TicTacToeGameModel extends ChangeNotifier {
         });
       }
       setPlayerTurn(true);
+      return null;
+    } else {
+      soundManager.stopBackgroundMusic();
       return null;
     }
   }
@@ -732,29 +739,35 @@ class TicTacToeGameModel extends ChangeNotifier {
     _currentPlayer = 'Super X';
     soundManager.playEffectSound('sounds/jackpot_sound_edit.mp3');
     superMove(i, j);
-    await Future.delayed(const Duration(milliseconds: 2000), () async {
-      List<List<int>> cellsToPop = getEmptyCells();
-      cellsToPop.shuffle();
-      _currentPlayer = 'X';
-      for (var pos in cellsToPop.take(GameRepo().getCellsToPop(_gridSizeInt))) {
-        await Future.delayed(const Duration(milliseconds: 300), () async {
-          _isGameFinished
-              ? null
-              : {
-                  simpleMove(
-                    pos[0],
-                    pos[1],
-                  ),
-                };
-          debugPrint('Super X effect applied to cell: $pos');
-          setSuperXCount(_superXCount - 1);
-        });
-      }
-      _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
-      setPlayerTurn(false);
-      _placedSuperSymbol = true;
-      notifyListeners();
-    });
+    if (!_isGameFinished) {
+      await Future.delayed(
+        const Duration(milliseconds: 1000),
+        () async {
+          List<List<int>> cellsToPop = getEmptyCells();
+          cellsToPop.shuffle();
+          _currentPlayer = 'X';
+          for (var pos
+              in cellsToPop.take(GameRepo().getCellsToPop(_gridSizeInt))) {
+            await Future.delayed(const Duration(milliseconds: 300), () async {
+              _isGameFinished
+                  ? null
+                  : {
+                      simpleMove(
+                        pos[0],
+                        pos[1],
+                      ),
+                    };
+              debugPrint('Super X effect applied to cell: $pos');
+              setSuperXCount(_superXCount - 1);
+            });
+          }
+          _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
+          setPlayerTurn(false);
+          _placedSuperSymbol = true;
+          notifyListeners();
+        },
+      );
+    }
   }
 
   Future<void> applySuperOEffect(int i, int j, String difficulty) async {
@@ -762,35 +775,41 @@ class TicTacToeGameModel extends ChangeNotifier {
     _currentPlayer = 'Super O';
     soundManager.playEffectSound('sounds/jackpot_sound_edit.mp3');
     superMove(i, j);
-    await Future.delayed(const Duration(milliseconds: 2000), () async {
-      List<List<int>> cellsToPop = [];
-      _levelDifficulty == 'hard'
-          ? {
-              cellsToPop = findStrategicOPositions(),
-              debugPrint('hard super move')
-            }
-          : {cellsToPop = getEmptyCells(), debugPrint('easy super move')};
-      cellsToPop.shuffle();
-      _currentPlayer = 'O';
-      for (var pos in cellsToPop.take(GameRepo().getCellsToPop(_gridSizeInt))) {
-        await Future.delayed(const Duration(milliseconds: 300), () async {
-          _isGameFinished
-              ? null
-              : {
-                  simpleMove(
-                    pos[0],
-                    pos[1],
-                  )
-                };
-          debugPrint('Super OOO effect applied to cell: $pos');
-          setSuperOCount(_superOCount - 1);
-        });
-      }
-      _currentPlayer = _currentPlayer == 'O' ? 'X' : 'O';
-      setPlayerTurn(true);
-      _placedSuperSymbol = true;
+    if (!_isGameFinished) {
+      await Future.delayed(
+        const Duration(milliseconds: 1000),
+        () async {
+          List<List<int>> cellsToPop = [];
+          _levelDifficulty == 'hard'
+              ? {
+                  cellsToPop = findStrategicOPositions(),
+                  debugPrint('hard super move')
+                }
+              : {cellsToPop = getEmptyCells(), debugPrint('easy super move')};
+          cellsToPop.shuffle();
+          _currentPlayer = 'O';
+          for (var pos
+              in cellsToPop.take(GameRepo().getCellsToPop(_gridSizeInt))) {
+            await Future.delayed(const Duration(milliseconds: 300), () async {
+              _isGameFinished
+                  ? null
+                  : {
+                      simpleMove(
+                        pos[0],
+                        pos[1],
+                      )
+                    };
+              debugPrint('Super OOO effect applied to cell: $pos');
+              setSuperOCount(_superOCount - 1);
+            });
+          }
+          _currentPlayer = _currentPlayer == 'O' ? 'X' : 'O';
+          setPlayerTurn(true);
+          _placedSuperSymbol = true;
 
-      notifyListeners();
-    });
+          notifyListeners();
+        },
+      );
+    }
   }
 }

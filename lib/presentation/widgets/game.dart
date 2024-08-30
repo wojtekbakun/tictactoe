@@ -237,18 +237,23 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                         if (!gameModel.isGameFinished) {
                           if (gameModel.canClick) {
                             await gameModel.makeMove(rows, cols);
-
+                            if (gameModel.isGameFinished) {
+                              widget.soundManager.stopBackgroundMusic();
+                              debugPrint('Stopped background music');
+                            }
                             if (gameModel.isPlayerVsAI &&
                                 gameModel.clickedInNewCell) {
                               if (!gameModel.isGameFinished) {
-                                await gameModel.aiMove();
+                                await gameModel.aiMove(widget.soundManager);
                               }
                             }
                             if (gameModel.isGameFinished) {
-                              await widget.soundManager.stopBackgroundMusic();
+                              widget.soundManager.stopBackgroundMusic();
                               debugPrint('Stopped background music');
                             }
                           }
+                        } else {
+                          widget.soundManager.stopBackgroundMusic();
                         }
                       },
 

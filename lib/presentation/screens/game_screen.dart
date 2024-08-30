@@ -132,12 +132,13 @@ class _GameScreenState extends State<GameScreen>
                                             1,
                                           ),
                                           painter: WinningLinePainter(
-                                              winningSequence:
-                                                  gameModel.winSequence,
-                                              cellSize:
-                                                  (screenWidth - 48) / gridSize,
-                                              screenWidth: screenWidth,
-                                              animationController: _controller),
+                                            winningSequence:
+                                                gameModel.winSequence,
+                                            cellSize:
+                                                (screenWidth - 48) / gridSize,
+                                            screenWidth: screenWidth,
+                                            animationController: _controller,
+                                          ),
                                         )
                                       : const SizedBox()
                                   : const SizedBox(),
