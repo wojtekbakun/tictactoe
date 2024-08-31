@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/data/models/ttt_game_model.dart';
@@ -72,7 +71,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           width: width,
         ),
         bottom: BorderSide(
-          color: Colors.black,
+          color: Colors.transparent,
           width: width,
         ),
       ),
@@ -95,7 +94,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           width: width,
         ),
         top: BorderSide(
-          color: Colors.black,
+          color: Colors.transparent,
           width: width,
         ),
       ),
@@ -114,7 +113,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           width: width,
         ),
         right: BorderSide(
-          color: Colors.black,
+          color: Colors.transparent,
           width: width,
         ),
         bottom: BorderSide(
@@ -133,7 +132,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           width: width,
         ),
         left: BorderSide(
-          color: Colors.black,
+          color: Colors.transparent,
           width: width,
         ),
         top: BorderSide(

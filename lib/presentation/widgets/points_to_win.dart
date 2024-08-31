@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe/core/consts/consts.dart';
 
 class PointsToWin extends StatelessWidget {
   final String pointsToWin;
@@ -7,34 +6,33 @@ class PointsToWin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String getPointsToWinImageString(String pointsToWin) {
+    int getPointsToWin(String pointsToWin) {
       //!TODO - refactor this
       switch (pointsToWin) {
         case '3':
-          return '';
+          return 3;
         case '4':
-          return MyConsts.sixWinningPath;
+          return 4;
         case '5':
-          return 'assets/images/number_5.png';
+          return 5;
         case '6':
-          return 'assets/images/number_6.jpg';
+          return 4;
         case '7':
-          return 'assets/images/number_7.png';
+          return 7;
         case '8':
-          return 'assets/images/number_7.png';
+          return 8;
         case '9':
-          return 'assets/images/number_9.jpg';
+          return 9;
         default:
-          return '';
+          return 3;
       }
     }
 
-    return getPointsToWinImageString(pointsToWin) == ''
-        ? const SizedBox()
-        : Image.asset(
-            getPointsToWinImageString(pointsToWin),
-            width: 20,
-            height: 20,
-          );
+    return Text('${getPointsToWin(pointsToWin).toString()}',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ));
   }
 }

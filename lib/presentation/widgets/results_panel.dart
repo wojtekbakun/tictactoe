@@ -17,7 +17,7 @@ class ResultsPanel extends StatelessWidget {
     return Container(
       height: screenWidth / 2,
       width: screenWidth,
-      color: Colors.blue,
+      color: const Color.fromARGB(255, 173, 216, 230), //173, 216, 230
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -7,6 +7,12 @@ class Score extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('X: $xScore, O: $oScore');
+    return Text(
+      'X: $xScore, O: $oScore',
+      style: const TextStyle(
+        fontSize: 20,
+        color: Colors.white,
+      ),
+    );
   }
 }

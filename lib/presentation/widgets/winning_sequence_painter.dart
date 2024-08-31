@@ -24,7 +24,7 @@ class WinningLinePainter extends CustomPainter {
     if (winningSequence.isEmpty) return;
 
     final paint = Paint()
-      ..color = Colors.red
+      ..color = const Color.fromARGB(255, 173, 216, 230) //173, 216, 230
       ..strokeWidth = cellSize / 10
       ..strokeCap = StrokeCap.round;
 

@@ -10,14 +10,24 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SoundManager soundManager = context.watch<SoundManager>();
-    return ElevatedButton(
-      onPressed: () {
-        soundManager.playClickSound('sounds/click_sound_effect.mp3');
-        onPressed();
-      },
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          soundManager.playClickSound('sounds/click_sound_effect.mp3');
+          onPressed();
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            Color.fromARGB(255, 173, 230, 176),
+          ),
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
