@@ -166,7 +166,6 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<void> simpleMove(int i, int j) async {
-    _whichEffectPlayer++;
     debugPrint('simple Effect player: $_whichEffectPlayer');
 
     switch (_whichEffectPlayer) {
@@ -182,7 +181,7 @@ class TicTacToeGameModel extends ChangeNotifier {
       default:
         soundManagerProvider.playEffectSound('sounds/bubble_pop.wav');
     }
-
+    _whichEffectPlayer++;
     _whichEffectPlayer >= 3 ? _whichEffectPlayer = 0 : null;
 
     _board[i][j] = _currentPlayer;
@@ -209,9 +208,8 @@ class TicTacToeGameModel extends ChangeNotifier {
   }
 
   Future<bool> superMove(int i, int j) async {
-    _whichEffectPlayer++;
     debugPrint('super Effect player: $_whichEffectPlayer');
-
+    _whichEffectPlayer++;
     switch (_whichEffectPlayer) {
       case 0:
         soundManagerProvider.playEffectSound3('sounds/bubble_pop.wav');

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tictactoe/presentation/screens/bubble_screen.dart';
-import 'package:tictactoe/presentation/screens/mode_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
