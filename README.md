@@ -11,3 +11,7 @@ This is a mobile Tic-Tac-Toe game developed based on client requirements from Fi
 - **Flutter:** The app is fully built in Flutter, providing smooth cross-platform performance and a native feel.
 - **Provider:** This package is used for state management, allowing for efficient and reactive UI updates.
 - **Audioplayers:** Integrated for sound effects, enhancing the gaming experience with audio feedback during gameplay.
+
+## Screenshots
+![IMG_3553](https://github.com/user-attachments/assets/90ec2784-d581-4b11-8cea-cbb29a3c34c8)
+![IMG_3522](https://github.com/user-attachments/assets/bdab2066-d00a-46bb-892c-ded712f16c8a)
