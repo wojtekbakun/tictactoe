@@ -6,17 +6,17 @@ import 'package:tictactoe/presentation/screens/grid_screen.dart';
 import 'package:tictactoe/presentation/screens/level_screen.dart';
 import 'package:tictactoe/presentation/screens/loading_screen.dart';
 import 'package:tictactoe/presentation/screens/mode_screen.dart';
-import 'package:desktop_window/desktop_window.dart';
-import 'dart:io' show Platform;
+//import 'package:desktop_window/desktop_window.dart';
+//import 'dart:io' show Platform;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    await DesktopWindow.setWindowSize(const Size(400, 800));
-    await DesktopWindow.setMinWindowSize(const Size(400, 800));
-    await DesktopWindow.setMaxWindowSize(const Size(400, 800));
-  }
+  // if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  //   await DesktopWindow.setWindowSize(const Size(400, 800));
+  //   await DesktopWindow.setMinWindowSize(const Size(400, 800));
+  //   await DesktopWindow.setMaxWindowSize(const Size(400, 800));
+  // }
 
   runApp(
     const ProvidersInit(

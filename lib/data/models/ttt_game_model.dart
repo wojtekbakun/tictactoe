@@ -126,7 +126,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     if (_board[i][j] == '') {
       setCanClick(false);
 
-      _isPlayerVsAI
+      _isPlayerVsAI || (!_isPlayerVsAI && _superBubblesMode)
           ? _currentPlayer == 'X' || _currentPlayer == 'Super X'
               ? shouldMakeXSuperMove()
                   ? {
@@ -198,6 +198,7 @@ class TicTacToeGameModel extends ChangeNotifier {
     } else if (isBoardFull()) {
       _winner = 'DRAW';
       debugPrint('Winner: $_winner');
+
       finishGame();
       return Future.value();
     }
@@ -357,6 +358,7 @@ class TicTacToeGameModel extends ChangeNotifier {
       _scoreY++;
       debugPrint('incrementing score Y');
     }
+    soundManagerProvider.stopBackgroundMusic();
     notifyListeners();
   }
   //  ==============================================
@@ -366,20 +368,9 @@ class TicTacToeGameModel extends ChangeNotifier {
   void aiFirstMove() {
     int center = _gridSizeInt ~/ 2;
     if (_isPlayerVsAI) {
-      if (_board[center][center] == '' && _levelDifficulty == 'hard') {
-        _currentPlayer = 'O';
-        debugPrint('AI first move: $_currentPlayer');
-        simpleMove(center, center);
-      } else {
-        bool randomBool = Random().nextBool();
-        if (randomBool && _superBubblesMode) {
-          _currentPlayer = 'Super O';
-          simpleMove(center, center);
-        } else {
-          _currentPlayer = 'O';
-          simpleMove(center, center);
-        }
-      }
+      _currentPlayer = 'O';
+      debugPrint('AI first move: $_currentPlayer');
+      simpleMove(center, center);
       _currentPlayer = 'X';
     }
   }
